@@ -11,6 +11,7 @@
 [Milestone 1](#milestone-1) • [Milestone 2](#milestone-2-7th-may-5pm) • [Milestone 3](#milestone-3-4th-june-5pm)
 
 ## Milestone 1
+
 ### Dataset
 
 We will use the [big five personality dataset](https://github.com/automoto/big-five-data). It contains a csv file (big_five_scores.csv) which has the personality scores for the five big personality traits (agreeableness, extraversion, openness, conscientiousness and neuroticism) for 300'000 respondents, along with their country of origin, age and sex.
@@ -22,7 +23,7 @@ The dataset is convenient to use, with few missing values and problems to handle
 
 - The country names are non-standardized and have been cut if longer than 10 letters. We had to map these values to a standard country code in a semi-automated way.
 
-There are no missing values in the other fields, which are ready to use as they are. 
+There are no missing values in the other fields, which are ready to use as they are.
 
 ### Problematic
 
@@ -32,9 +33,7 @@ To show how personality varies geographically, we will demonstrate a world map, 
 
 ### Exploratory Data Analysis
 
-Our exploratory data analysis can be found [here](http://htmlpreview.github.io/?https://github.com/com-480-data-visualization/data-visualization-project-2021-slackers/blob/master/Milestone_1.html). We handled missing and non-standard country names, and checked if the data is representative. There is roughly 1.5 more data from female respondents than males. Only a few countries have more than 1'000 entries. We also found that there is an unexpected number of respondents aged 99 years; these were considered as non-serious respondents and discarded. Additionnally, we looked at the distribution of each score in the United States. Because it is uni-modal and unskewed, displaying country means is somewhat reasonable. 
-
-
+Our exploratory data analysis can be found [here](http://htmlpreview.github.io/?https://github.com/com-480-data-visualization/data-visualization-project-2021-slackers/blob/master/Milestone_1.html). We handled missing and non-standard country names, and checked if the data is representative. There is roughly 1.5 more data from female respondents than males. Only a few countries have more than 1'000 entries. We also found that there is an unexpected number of respondents aged 99 years; these were considered as non-serious respondents and discarded. Additionnally, we looked at the distribution of each score in the United States. Because it is uni-modal and unskewed, displaying country means is somewhat reasonable.
 
 ### Related work
 
@@ -46,8 +45,7 @@ Another inspiration for us was one of the projects from previous years in this c
 
 Lastly, Covid-19 was among our inspirations due to the its pyschological effect on people. This lead our interests to work with psychology based data.
 
-We would like to mention that we have never used this dataset in any of our past works before. 
-
+We would like to mention that we have never used this dataset in any of our past works before.
 
 ## Milestone 2 (7th May, 5pm)
 
