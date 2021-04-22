@@ -36,7 +36,7 @@ To show how personality varies geographically, we will demonstrate a world map, 
 
 ### Related work
 
-We found this dataset in the mentioned Github repository. In the same repository, the user has already preprocessed the dataset and he has created some reports. For example, in the `reports` folder, the user has already written the top and bottom 100 of the five personality scores in `csv` files. We researched as well in the internet if there have been other visualization projects concerning the personality tests, however we did not succeed finding additional work including our data. In this sense, our approach is original because of the lack of previous visualizations of personalities with demographic information world-wide. After we got this idea, we did find a website ([here](https://www.16personalities.com/country-profiles/global/world)) that show similar world maps based on personnality. However, these did not includes demographics. Our project could extend their website by allowing the user to refine the search based on age and sex. We also found evidence in the literature that the big-five factors vary by country [^1].
+We found this dataset in the mentioned Github repository. In the same repository, the user has already preprocessed the dataset and he has created some reports. For example, in the `reports` folder, the user has already written the top and bottom 100 of the five personality scores in `csv` files. We researched as well in the internet if there have been other visualization projects concerning the personality tests, however we did not succeed finding additional work including our data. In this sense, our approach is original because of the lack of previous visualizations of personalities with demographic information world-wide. After we got this idea, we did find a website ([here](https://www.16personalities.com/country-profiles/global/world)) that show similar world maps based on personnality. However, these did not includes demographics. Our project could extend their website by allowing the user to refine the search based on age and sex. We also found evidence in the literature that the big-five factors vary by country (GELADE, Garry A. Personality and place. British Journal of Psychology, 2013, vol. 104, no 1, p. 69-82.).
 
 We were especially inspired by other world-wide visualization projects. One of them is the estimation of life satisfaction per country basis on a world heatmap. The corresponding visualization can be found [here](https://i.redd.it/aqcardzlrik51.png).
 
@@ -46,7 +46,6 @@ Lastly, Covid-19 was among our inspirations due to the its pyschological effect 
 
 We would like to mention that we have never used this dataset in any of our past works before. 
 
-[^1]: GELADE, Garry A. Personality and place. British Journal of Psychology, 2013, vol. 104, no 1, p. 69-82.
 
 ## Milestone 2 (7th May, 5pm)
 
