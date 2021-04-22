@@ -14,7 +14,7 @@
 
 ### Dataset
 
-We will use the [big five personality dataset](https://github.com/automoto/big-five-data). It contains a csv file (big_five_scores.csv) which has the personality scores for the five big personality traits (agreeableness, extraversion, openness, conscientiousness and neuroticism) for 300'000 respondents, along with their country of origin, age and sex.
+We will use the [big five personality dataset](https://github.com/automoto/big-five-data). It contains a csv file (big_five_scores.csv) which has the personality scores for the five big personality traits (agreeableness, extraversion, openness, conscientiousness, and neuroticism) for 300'000 respondents, along with their country of origin, age, and sex.
 
 **Pre-processing to do:**
 The dataset is convenient to use, with few missing values and problems to handle:
@@ -27,23 +27,23 @@ There are no missing values in the other fields, which are ready to use as they 
 
 ### Problematic
 
-We want to explore whether people from different geographic regions, age groups or sex display different personalities. More specifically, our purpose is to discover domain personalities of people from different ages, sexes and countries according to the big five personnality traits.
+We want to explore whether people from different geographic regions, age groups or sex display different personalities. More specifically, our purpose is to discover domain personalities of people from different ages, sexes, and countries according to the big five personality traits.
 
-To show how personality varies geographically, we will demonstrate a world map, colored according to each country's mean score in one personality trait. The user will be able to chose which personality trait he/she wants to explore. The user will also be able to click on a country to discover how the personality differs by age and sex within that country.
+To show how personality varies geographically, we will demonstrate a world map, colored according to each country's mean score in one personality trait. The user will be able to choose which personality trait he/she wants to explore. The user will also be able to click on a country to discover how the personality differs by age and sex within that country.
 
 ### Exploratory Data Analysis
 
-Our exploratory data analysis can be found [here](http://htmlpreview.github.io/?https://github.com/com-480-data-visualization/data-visualization-project-2021-slackers/blob/master/Milestone_1.html). We handled missing and non-standard country names, and checked if the data is representative. There is roughly 1.5 more data from female respondents than males. Only a few countries have more than 1'000 entries. We also found that there is an unexpected number of respondents aged 99 years; these were considered as non-serious respondents and discarded. Additionnally, we looked at the distribution of each score in the United States. Because it is uni-modal and unskewed, displaying country means is somewhat reasonable.
+Our exploratory data analysis can be found [here](http://htmlpreview.github.io/?https://github.com/com-480-data-visualization/data-visualization-project-2021-slackers/blob/master/Milestone_1.html). We handled missing and non-standard country names and checked if the data is representative. There is roughly 1.5 more data from female respondents than males. Only a few countries have more than 1'000 entries. We also found that there is an unexpected number of respondents aged 99 years; these were considered as non-serious respondents and discarded. Additionally, we looked at the distribution of each score in the United States. Because it is unimodal and not skewed, displaying country means is somewhat reasonable.
 
 ### Related work
 
-We found this dataset in the mentioned Github repository. In the same repository, the user has already preprocessed the dataset and he has created some reports. For example, in the `reports` folder, the user has already written the top and bottom 100 of the five personality scores in `csv` files. We researched as well in the internet if there have been other visualization projects concerning the personality tests, however we did not succeed finding additional work including our data. In this sense, our approach is original because of the lack of previous visualizations of personalities with demographic information world-wide. After we got this idea, we did find a website ([here](https://www.16personalities.com/country-profiles/global/world)) that show similar world maps based on personnality. However, these did not includes demographics. Our project could extend their website by allowing the user to refine the search based on age and sex. We also found evidence in the literature that the big-five factors vary by country (GELADE, Garry A. Personality and place. British Journal of Psychology, 2013, vol. 104, no 1, p. 69-82.).
+We found this dataset in the mentioned GitHub repository. In the same repository, the user has already preprocessed the dataset and he has created some reports. For example, in the `reports` folder, the user has already written the top and bottom 100 of the five personality scores in `csv` files. We researched as well on the internet if there have been other visualization projects concerning the personality tests, however we failed finding additional work including our data. In this sense, our approach is original because of the lack of previous visualizations of personalities with demographic information world-wide. After we got this idea, we did find a website ([here](https://www.16personalities.com/country-profiles/global/world)) that show similar world maps based on personality. However, these did not include demographics. Our project could extend their website by allowing the user to refine the search based on age and sex. We also found evidence in the literature that the big-five factors vary by country (GELADE, Garry A. Personality and place. British Journal of Psychology, 2013, vol. 104, no 1, p. 69-82.).
 
 We were especially inspired by other world-wide visualization projects. One of them is the estimation of life satisfaction per country basis on a world heatmap. The corresponding visualization can be found [here](https://i.redd.it/aqcardzlrik51.png).
 
-Another inspiration for us was one of the projects from previous years in this course. In that project, the group visualized the olympic events in the world throughout the history. They used a world map to display the number of participants from each country. We decided that usage of world map with interesting information results in decent visualizations. The website of that project can be found in [this link](https://com-480-data-visualization.github.io/com-480-project-knn-viz/website/map.html).
+Another inspiration for us was one of the projects from previous years in this course. In that project, the group visualized the Olympic events in the world throughout the history. They used a world map to display the number of participants from each country. We decided that usage of world map with interesting information results in decent visualizations. The website of that project can be found in [this link](https://com-480-data-visualization.github.io/com-480-project-knn-viz/website/map.html).
 
-Lastly, Covid-19 was among our inspirations due to the its pyschological effect on people. This lead our interests to work with psychology based data.
+Lastly, Covid-19 was among our inspirations due to its psychological effect on people. This led our interests to work with psychology-based data.
 
 We would like to mention that we have never used this dataset in any of our past works before.
 
