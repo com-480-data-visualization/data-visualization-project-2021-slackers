@@ -8,7 +8,7 @@
 | Furkan Karakas   | 306399 |
 | Alexandre Luster | 289240 |
 
-[Milestone 1](#milestone-1-23rd-april-5pm) • [Milestone 2](#milestone-2-7th-may-5pm) • [Milestone 3](#milestone-3-4th-june-5pm)
+[Milestone 1](#milestone-1) • [Milestone 2](#milestone-2-7th-may-5pm) • [Milestone 3](#milestone-3-4th-june-5pm)
 
 ## Milestone 1
 ### Dataset
