@@ -32,7 +32,7 @@ To show how personality varies geographically, we will demonstrate a world map, 
 
 ### Exploratory Data Analysis
 
-Our exploratory data analysis can be found [here](Milestone_1.ipynb). We handled missing and non-standard country names, and checked if the data is representative. There is roughly 1.5 more data from female respondents than males. Only a few countries have more than 1'000 entries. We also found that there is an unexpected number of respondents aged 99 years; these were considered as non-serious respondents and discarded. 
+Our exploratory data analysis can be found [here](http://htmlpreview.github.io/?https://github.com/com-480-data-visualization/data-visualization-project-2021-slackers/blob/master/Milestone_1.html). We handled missing and non-standard country names, and checked if the data is representative. There is roughly 1.5 more data from female respondents than males. Only a few countries have more than 1'000 entries. We also found that there is an unexpected number of respondents aged 99 years; these were considered as non-serious respondents and discarded. 
 
 
 
