@@ -14,7 +14,7 @@
 
 ### Dataset
 
-We will use the [big five personality dataset](https://github.com/automoto/big-five-data). It contains a csv file (big_five_scores.csv) which has the personality scores for the five big personality traits (agreeableness, extraversion, openness, conscientiousness, and neuroticism) for 300'000 respondents, along with their country of origin, age, and sex.
+We will use a [big five personality dataset](https://github.com/automoto/big-five-data). It contains a csv file (big_five_scores.csv) which has the personality scores for the five big personality traits (agreeableness, extraversion, openness, conscientiousness, and neuroticism) for 300'000 respondents, along with their country of origin, age, and sex.
 
 **Pre-processing to do:**
 The dataset is convenient to use, with few missing values and problems to handle:
@@ -27,7 +27,8 @@ There are no missing values in the other fields, which are ready to use as they 
 
 ### Problematic
 
-We want to explore whether people from different geographic regions, age groups or sex display different personalities. More specifically, our purpose is to discover domain personalities of people from different ages, sexes, and countries according to the big five personality traits.
+Do people from different geographic regions, age groups or sex display different personalities ? We want to develop an online visualization that allows the user discover information about the big five personality traits, and explore how they are related to these factors interactively. The target user will most likely do so for his entertainement, but we also want to enable users to gain useful information, for example when traveling or moving to a new location. Our goal with this project is also to break stereotypes. We expect users to be curious about preconceived ideas they have, which most of the time will turn out to be unfounded.
+
 
 To show how personality varies geographically, we will demonstrate a world map, colored according to each country's mean score in one personality trait. The user will be able to choose which personality trait he/she wants to explore. The user will also be able to click on a country to discover how the personality differs by age and sex within that country.
 
