@@ -1,6 +1,10 @@
 const highResolution = true;
+const WIDTH = 960;
+const HEIGHT = 500;
+const MIN_OBS = 10;
+
 const projector = d3.geoNaturalEarth1(); /*geoNaturalEarth1, geoMercator, geopEquirectangular etc.*/
-const chosenTrait = 'extr';
+const chosenTrait = 'open';
 
 
 const RES = highResolution ? 50 : 110;
@@ -27,34 +31,36 @@ function whenDocumentLoaded(action) {
 	}
 }
 
+
 function makeWorldMap() {
+	/*Select Map SVG and set size*/
 	const svg = d3.select('svg');
-	svg.attr("width", 960).attr("height", 500);
+	svg.attr("width", WIDTH).attr("height", HEIGHT);
 
-
+	/* Define the map projections*/
 	const height = +svg.attr("height");
 	const width = +svg.attr("width");
 	const projection = projector.scale(Math.min(width/ Math.PI, height/ Math.PI));
 	const pathGenerator = d3.geoPath().projection(projection);
 
-	const trait = 'open';
-
-
+	/* Allow zooming*/
 	const g = svg.append('g');
 	svg.call(d3.zoom().on('zoom', () => {
 		g.attr('transform', d3.event.transform)
 	}));
 
+	/* Draw background earth (i.e. sea)*/
 	g.append('path')
 		.attr('class', 'sphere')
 		.attr('d', pathGenerator({type: 'Sphere'}));
 
+	/* Load country info from world atlas, topojson file and our dataset, execute when all are loaded. */
 	Promise.all([
 		d3.tsv('https://unpkg.com/world-atlas@1.1.4/world/' + RES + 'm.tsv'),
 		d3.json('https://unpkg.com/world-atlas@1.1.4/world/' + RES + 'm.json'),
 		d3.csv('../clean_data.csv', rowConverter)
 	]).then(([tsvData, topoJSONdata, csvData]) => {
-
+		/* Create helper objects to convert between full name, iso-alpha 2 name and code used in topjson*/
 		const id_to_name = {};
 		const id_to_isoa2 = {};
 		const name_to_isoa2 = {};
@@ -64,6 +70,7 @@ function makeWorldMap() {
 			name_to_isoa2[d.name] = d.iso_a2;
 		});
 
+		/* Compute stats (i.e. mean of each trait and count) for each country*/
 		var stats = {};
 		csvData.forEach((row) => {
 			const country = row.country;
@@ -78,7 +85,7 @@ function makeWorldMap() {
 				stats[country].neur += row.neur;
 			}
 		});
-
+		/* Divide by total to make a mean, and keep track of min and max for the chosen trait (used for color scale)*/
 		var min = 1;
 		var max = 0;
 
@@ -88,16 +95,18 @@ function makeWorldMap() {
 		  stats[key].open /= stats[key].count;
 		  stats[key].cons /= stats[key].count;
 		  stats[key].neur /= stats[key].count;
-		  max = Math.max(max, stats[key][chosenTrait])
-		  min = Math.min(min, stats[key][chosenTrait])
+		  if (stats[key].count >= MIN_OBS) {
+			  max = Math.max(max, stats[key][chosenTrait])
+			  min = Math.min(min, stats[key][chosenTrait])
+		  }
+
 		});
 
-		console.log(min, max)
+		const colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
+			.domain([min, max]);
 
+		/* Draw all topojson countries*/
 		const countries = topojson.feature(topoJSONdata, topoJSONdata.objects.countries);
-		const colorScale = d3.scaleSequential(d3.interpolateOranges)
-			.domain([min, max])
-
 
 		g.selectAll('path').data(countries.features)
 		  .enter().append('path')
@@ -106,8 +115,12 @@ function makeWorldMap() {
 				var color;
 				try {
 					color = colorScale(stats[id_to_isoa2[d.id]][chosenTrait]);
+					const n_obs = stats[id_to_isoa2[d.id]].count;
+					if (n_obs < MIN_OBS) {
+						color = 'lightgray'
+					}
 				} catch(e) {
-
+					console.log('Uncaught: ', id_to_isoa2[d.id]); /**/
 					color = 'lightgray';
 				}
 				return color;
@@ -115,9 +128,17 @@ function makeWorldMap() {
 			.attr('d', pathGenerator)
 			.append('title')
 				.text(d => {
-					return id_to_name[d.id]})
+					var title;
+					try {
+						title = id_to_name[d.id] + ' (' + stats[id_to_isoa2[d.id]].count + ')';
+					} catch(e) {
+						title = 'Unidentified';
+					}
+					return title;
+				});
+
 	});
-}
+};
 
 
 whenDocumentLoaded(() => {
