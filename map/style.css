@@ -1,0 +1,20 @@
+body {
+	background: rgb(140, 140, 140);
+}
+svg {
+	background: lightblue;
+}
+
+.sphere {
+	fill: darkblue;
+}
+
+
+.country {
+	stroke: black;
+	stroke-width: 0.1;
+}
+
+.country:hover {
+	fill: red;
+}
