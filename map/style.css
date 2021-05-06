@@ -1,8 +1,18 @@
-body {
-  background: rgb(140, 140, 140);
-}
 svg {
   background: lightblue;
+}
+
+body {
+  height: 100%;
+  font-size: 16px;
+  background: #97bece;
+  text-align: center;
+}
+
+label {
+  color: #ce641e;
+  font-weight: bold;
+  display: block;
 }
 
 .sphere {

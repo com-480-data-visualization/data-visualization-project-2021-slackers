@@ -157,3 +157,8 @@ function makeWorldMap() {
 whenDocumentLoaded(() => {
   makeWorldMap();
 });
+
+const selectElem = document.getElementById("traits");
+selectElem.onchange = function () {
+  alert("You changed the selection!");
+};

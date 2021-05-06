@@ -29,7 +29,6 @@ There are no missing values in the other fields, which are ready to use as they 
 
 Do people from different geographic regions, age groups or sex display different personalities? We want to develop an online visualization that allows the user discover information about the big five personality traits and explore how they are related to these factors interactively. The target user will most likely do so for his entertainment, but we also want to enable users to gain useful information, for example when traveling or moving to a new location. Our goal with this project is also to break stereotypes. We expect users to be curious about preconceived ideas they have, which most of the time will turn out to be unfounded.
 
-
 To show how personality varies geographically, we will demonstrate a world map, colored according to each country's mean score in one personality trait. The user will be able to choose which personality trait he/she wants to explore, or to click on a country to discover how the personality differs by age and sex within that country.
 
 ### Exploratory Data Analysis
@@ -60,4 +59,3 @@ We would like to mention that we have never used this dataset in any of our past
 
 - < 24h: 80% of the grade for the milestone
 - < 48h: 70% of the grade for the milestone
-
