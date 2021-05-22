@@ -27,3 +27,13 @@ label {
 .country:hover {
   fill: red;
 }
+
+.highlight {
+	fill: red;
+}
+
+ul {
+    padding: 10px;
+    display: inline-block;
+	text-align: left;
+}
