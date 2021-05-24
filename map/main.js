@@ -7,6 +7,9 @@ const DEFAULTCOUNTRYCOLOR = "green";
 
 const projector = d3.geoNaturalEarth1(); /*geoNaturalEarth1, geoMercator, geopEquirectangular etc.*/
 var chosenTrait = "none";
+var minAge = 0;
+var maxAge = 99;
+var chosenSex = "Both";
 
 const RES = highResolution ? 50 : 110;
 
@@ -15,7 +18,7 @@ function rowConverter(d) {
     id: parseInt(d.case_id),
     country: d.country,
     age: parseInt(d.age),
-    sex: parseInt(d.sex),
+    sex: d.sex,
     agre: parseFloat(d.agreeableness),
     extr: parseFloat(d.extraversion),
     open: parseFloat(d.openness),
@@ -32,13 +35,17 @@ function whenDocumentLoaded(action) {
   }
 }
 
+function selectSex(s) {
+	chosenSex = s;
+	map.g.selectAll("path").attr("fill", map.colorFill());
+}
+
 var stats = {};
 var id_to_name = {};
 var id_to_isoa2 = {};
 var name_to_isoa2 = {};
 
-var minAge = 0;
-var maxAge = 99;
+
 
 
 
@@ -62,6 +69,7 @@ class Map {
 			.range([0, WIDTH/2]);       // This is where the axis is placed: from 100px to 800px
 		// Draw the axis
 		var scaleSvg = d3.select("#ageScale").attr("width", WIDTH).attr("height", scaleH);
+
 		var ageAxis = scaleSvg
 			.append("g")
 			.attr("transform", `translate(50,${scaleH/2})`)      // This controls the vertical position of the Axis
@@ -82,7 +90,7 @@ class Map {
 
 		ageAxis.call(brush);
 
-		scaleSvg.append("text").attr("id", "ageTitle").attr("x", 0).attr("y", 20).text(`Selected age: ${minAge}-${maxAge}`);
+		scaleSvg.append("text").attr("id", "ageTitle").attr("x", 10).attr("y", 20).text(`Selected age: ${minAge}-${maxAge}`);
 
 
 		/* Allow zooming*/
@@ -114,14 +122,19 @@ class Map {
 
 	    /* Compute stats (i.e. mean of each trait and count) for each country*/
 		this.rawCSV = csvData;
-		this.computeStats = function(minAge = undefined, maxAge = undefined) {
+		this.computeStats = function() {
 			stats = {}
 			var data = this.rawCSV;
 
-			if ((minAge !== undefined) || (maxAge !== undefined)) {
-				var byAge = crossfilter(map.rawCSV).dimension(d => d.age);
-				data = byAge.filter([minAge, maxAge]).top(Infinity);
+
+			var byAge = crossfilter(map.rawCSV).dimension(d => d.age);
+			data = byAge.filter([minAge, maxAge]).top(Infinity);
+
+			if (chosenSex !== "Both") {
+				var byAge = crossfilter(map.rawCSV).dimension(d => d.sex);
+				data = byAge.filter(chosenSex).top(Infinity);
 			}
+			console.log(data.length)
 
 
 			data.forEach((row) => {
@@ -158,16 +171,16 @@ class Map {
 
 
 
-		this.colorFill = function(t, minAge = undefined, maxAge = undefined) {
-			stats = this.computeStats(minAge, maxAge);
+		this.colorFill = function() {
+			stats = this.computeStats();
 
 			var min = 1;
 		    var max = 0;
 
 		    Object.keys(stats).forEach((key) => {
 		      if (stats[key].count >= MIN_OBS) {
-		        max = Math.max(max, stats[key][t]);
-		        min = Math.min(min, stats[key][t]);
+		        max = Math.max(max, stats[key][chosenTrait]);
+		        min = Math.min(min, stats[key][chosenTrait]);
 		      }
 		    });
 
@@ -179,7 +192,7 @@ class Map {
 			return (d) => {
 			  var color;
 			  try {
-				color = colorScale(stats[id_to_isoa2[d.id]][t]);
+				color = colorScale(stats[id_to_isoa2[d.id]][chosenTrait]);
 				const n_obs = stats[id_to_isoa2[d.id]].count;
 				if (n_obs < MIN_OBS) {
 				  color = "lightgray";
@@ -240,6 +253,6 @@ selectElem.onchange = function (d) {
   if (chosenTrait === "none") {
 	   map.g.selectAll("path").attr("fill", DEFAULTCOUNTRYCOLOR);
   } else {
-	   map.g.selectAll("path").attr("fill", map.colorFill(chosenTrait, minAge, maxAge));
+	   map.g.selectAll("path").attr("fill", map.colorFill());
   }
 };
