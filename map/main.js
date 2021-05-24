@@ -37,7 +37,9 @@ function whenDocumentLoaded(action) {
 
 function selectSex(s) {
 	chosenSex = s;
-	map.g.selectAll("path").attr("fill", map.colorFill());
+	if (chosenTrait !== "none") {
+		map.g.selectAll("path").attr("fill", map.colorFill());
+	}
 }
 
 var stats = {};
