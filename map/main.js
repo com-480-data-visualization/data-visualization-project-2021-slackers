@@ -245,6 +245,7 @@ whenDocumentLoaded(() => {
 });
 
 const selectElem = document.getElementById("traits");
+
 selectElem.onchange = function (d) {
   chosenTrait = d3.select(this).property("value");
   if (chosenTrait === "none") {
