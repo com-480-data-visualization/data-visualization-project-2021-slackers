@@ -26,17 +26,19 @@
 
 	  <a href="html/traits.html">More info on the 5 traits</a>
 
+    <br/>
 
-    <div id="dropdown">
-      <label for="traits">Choose a trait:</label>
-      <select name="traits" id="traits">
-		<option value="none">None</option>
-        <option value="open">Openness</option>
-        <option value="extr">Extraversion</option>
-        <option value="agre">Agreeableness</option>
-        <option value="cons">Conscientiousness</option>
-        <option value="neur">Neuroticism</option>
-      </select>
+
+    <div id="traits-div">
+      <label class="first-label" for="traits-list">Choose traits:</label>
+      <br/>
+      <ul id="traits-list">
+        <li><input type="checkbox" id="open" name="open" value="Openness"><label for="open">Openness</label></li>
+        <li><input type="checkbox" id="extr" name="extr" value="Extraversion"><label for="extr">Extraversion</label></li>
+        <li><input type="checkbox" id="agre" name="agre" value="Agreeableness"><label for="agre">Agreeableness</label></li>
+        <li><input type="checkbox" id="cons" name="cons" value="Conscientiousness"><label for="cons">Conscientiousness</label></li>
+        <li><input type="checkbox" id="neur" name="neur" value="Neuroticism"><label for="neur">Neuroticism</label></li>
+      </ul>
     </div>
 
     <br />

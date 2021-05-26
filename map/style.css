@@ -9,7 +9,7 @@ body {
   text-align: center;
 }
 
-label {
+.first-label {
   color: #ce641e;
   font-weight: bold;
   display: block;
@@ -29,11 +29,26 @@ label {
 }
 
 .highlight {
-	fill: red;
+  fill: red;
 }
 
 ul {
-    padding: 10px;
-    display: inline-block;
-	text-align: left;
+  padding: 10px;
+  display: inline-block;
+  text-align: left;
+}
+
+#traits-list {
+  display: inline;
+  color: white;
+  margin: 5%;
+}
+#traits-div ul {
+  text-align: center;
+}
+
+#traits-div li {
+  display: inline;
+  color: white;
+  margin: 1%;
 }
