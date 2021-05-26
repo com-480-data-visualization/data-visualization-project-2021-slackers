@@ -14,7 +14,6 @@ h1 {
 }
 
 svg {
-  background: lightblue;
 }
 
 body {
@@ -41,7 +40,6 @@ body {
 
 .flipswitch {
   position: relative;
-  background: white;
   width: 120px;
   height: 40px;
   -webkit-appearance: initial;
@@ -69,9 +67,6 @@ body {
   color: black;
   border: #888 1px solid;
   border-radius: 3px;
-}
-
-.flipswitch:after {
   left: 2%;
   content: "OFF";
 }
@@ -79,15 +74,16 @@ body {
 .flipswitch:checked:after {
   left: 53%;
   content: "ON";
+  background-color: #23a6d5;
 }
 
 .sphere {
-  fill: darkblue;
+  fill: lightblue;
 }
 
 .country {
   stroke: black;
-  stroke-width: 0.1;
+  stroke-width: 0.1mm;
 }
 
 .country:hover {
@@ -104,29 +100,15 @@ ul {
   text-align: left;
 }
 
+.items {
+  display: inline-block;
+  margin: 5px;
+}
+
 .items label {
   color: #ffffff;
   font-weight: bold;
   display: block;
-}
-
-#traits-list {
-  display: inline;
-  color: white;
-  margin: 5%;
-}
-#traits-div ul {
-  text-align: center;
-}
-
-#traits-div li {
-  display: inline;
-  color: white;
-  margin: 1px;
-}
-
-.items {
-  display: inline-block;
 }
 
 .radio-toolbar input[type="radio"] {

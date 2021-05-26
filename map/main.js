@@ -3,7 +3,7 @@ const WIDTH = 960;
 const HEIGHT = 500;
 const MIN_OBS = 10;
 const scaleH = 100;
-const DEFAULTCOUNTRYCOLOR = "green";
+const DEFAULTCOUNTRYCOLOR = "gray";
 
 const projector =
   d3.geoNaturalEarth1(); /*geoNaturalEarth1, geoMercator, geopEquirectangular etc.*/
@@ -57,9 +57,11 @@ class Map {
     /* Define the map projections*/
     const height = +svg.attr("height");
     const width = +svg.attr("width");
-    const projection = projector.scale(
-      Math.min(width / Math.PI, height / Math.PI)
-    );
+    const projection = projector
+      .scale(width / 1.8 / Math.PI)
+      .rotate([0, 0])
+      .center([0, 0])
+      .translate([width / 2, height / 2]);
     const pathGenerator = d3.geoPath().projection(projection);
 
     /*Scale for age*/
@@ -107,11 +109,11 @@ class Map {
 
     /* Allow zooming*/
     const g = svg.append("g");
-    svg.call(
+    /*svg.call(
       d3.zoom().on("zoom", () => {
         g.attr("transform", d3.event.transform);
       })
-    );
+    );*/
 
     this.g = g;
     /* Draw background earth (i.e. sea)*/
@@ -252,7 +254,8 @@ whenDocumentLoaded(() => {
   map = new Map(chosenTrait);
 });
 
-const selectElem = document.getElementById("traits-div");
+const selectElem = document.getElementById("open");
+console.log(selectElem);
 
 selectElem.onchange = function (d) {
   chosenTrait = d3.select(this).property("value");
