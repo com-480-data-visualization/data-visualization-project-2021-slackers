@@ -17,7 +17,7 @@
       src="//cdnjs.cloudflare.com/ajax/libs/d3-legend/1.1.0/d3-legend.js"
       defer
     ></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.7/crossfilter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.7/crossfilter.js"></script>
     <script src="https://unpkg.com/topojson@3" defer></script>
     <script src="main.js" defer></script>
   </head>
@@ -26,42 +26,92 @@
   <!--<script src="https://d3js.org/topojson.v2.min.js" defer></script>-->
   <!--<script src="https://bl.ocks.org/mbostock/raw/7ea1dde508cec6d2d95306f92642bc42/6aac691494f752142a67cc43c51a0fd09896dbd4/versor.js" defer></script>-->
   <body>
-	  <h1>Personality types across the world</h1>
+    <h1>Personality types across the world</h1>
 
-	  <a href="html/traits.html">More info on the 5 traits</a>
-
-    <br/>
-
-
-    <div id="traits-div">
-      <label id="first-label" for="traits-list">Choose traits:</label>
-      <br/>
-      <ul id="traits-list">
-        <li><input type="checkbox" class="flipswitch" id="open" name="open" value="Openness"><label for="open">Openness</label></li>
-        <li><input type="checkbox" class="flipswitch" id="extr" name="extr" value="Extraversion"><label for="extr">Extraversion</label></li>
-        <li><input type="checkbox" class="flipswitch" id="agre" name="agre" value="Agreeableness"><label for="agre">Agreeableness</label></li>
-        <li><input type="checkbox" class="flipswitch" id="cons" name="cons" value="Conscientiousness"><label for="cons">Conscientiousness</label></li>
-        <li><input type="checkbox" class="flipswitch" id="neur" name="neur" value="Neuroticism"><label for="neur">Neuroticism</label></li>
-      </ul>
-    </div>
-
+    <a href="html/traits.html">More info on the 5 traits</a>
     <br />
-     <!--<div>-->
-     <!--<h2 id="current"></h2>-->
-     <!--<canvas id="globe"></canvas>-->
-   <!--</div>-->
-  <svg id = "map"></svg>
-
-	<svg id = "ageScale">
-	</svg>
-	<div>
-		<input type="radio" name="gender" value="Male" onclick="selectSex('Male')"> Male</input>
-		<input type="radio" name="gender" value="Female" onclick="selectSex('Female')"> Female</input>
-		<input type="radio" name="gender" value="Both" onclick="selectSex('Both')" checked> Both</input>
-	</div>
-
-
-
-
+    <div id="traits-div">
+      <br />
+      <div class="items">
+        <label for="open">Openness</label
+        ><input
+          type="checkbox"
+          class="flipswitch"
+          id="open"
+          name="open"
+          value="Openness"
+        />
+      </div>
+      <div class="items">
+        <label for="extr">Extraversion</label>
+        <input
+          type="checkbox"
+          class="flipswitch"
+          id="extr"
+          name="extr"
+          value="Extraversion"
+        />
+      </div>
+      <div class="items">
+        <label for="agre">Agreeableness</label>
+        <input
+          type="checkbox"
+          class="flipswitch"
+          id="agre"
+          name="agre"
+          value="Agreeableness"
+        />
+      </div>
+      <div class="items">
+        <label for="cons">Conscientiousness</label>
+        <input
+          type="checkbox"
+          class="flipswitch"
+          id="cons"
+          name="cons"
+          value="Conscientiousness"
+        />
+      </div>
+      <div class="items">
+        <label for="neur">Neuroticism</label
+        ><input
+          type="checkbox"
+          class="flipswitch"
+          id="neur"
+          name="neur"
+          value="Neuroticism"
+        />
+      </div>
+    </div>
+    <br />
+    <svg id="map"></svg>
+    <svg id="ageScale"></svg>
+    <div>
+      <input
+        type="radio"
+        name="gender"
+        id="male"
+        value="Male"
+        onclick="selectSex('Male')"
+      />
+      <label for="male">Male</label>
+      <input
+        type="radio"
+        name="gender"
+        id="female"
+        value="Female"
+        onclick="selectSex('Female')"
+      />
+      <label for="female">Female</label>
+      <input
+        type="radio"
+        name="gender"
+        id="both"
+        value="Both"
+        onclick="selectSex('Both')"
+        checked
+      />
+      <label for="both">Both</label>
+    </div>
   </body>
 </html>

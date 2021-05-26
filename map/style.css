@@ -104,8 +104,8 @@ ul {
   text-align: left;
 }
 
-#first-label {
-  color: #ce641e;
+.items label {
+  color: #ffffff;
   font-weight: bold;
   display: block;
 }
@@ -122,6 +122,9 @@ ul {
 #traits-div li {
   display: inline;
   color: white;
-  margin: 1%;
+  margin: 1px;
 }
 
+.items {
+  display: inline-block;
+}
