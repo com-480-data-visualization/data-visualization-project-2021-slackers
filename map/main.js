@@ -4,10 +4,17 @@ const HEIGHT = 500;
 const MIN_OBS = 10;
 const scaleH = 100;
 const DEFAULTCOUNTRYCOLOR = "gray";
+const nameMap = {
+  open: "openness",
+  extr: "extraversion",
+  agre: "agreeableness",
+  cons: "conscientiousness",
+  neur: "neuroticism",
+};
 
 const projector =
   d3.geoNaturalEarth1(); /*geoNaturalEarth1, geoMercator, geopEquirectangular etc.*/
-var chosenTrait = "none";
+const chosenTraitArr = [];
 var minAge = 0;
 var maxAge = 99;
 var chosenSex = "Both";
@@ -38,7 +45,7 @@ function whenDocumentLoaded(action) {
 
 function selectSex(s) {
   chosenSex = s;
-  if (chosenTrait !== "none") {
+  if (chosenTraitArr.length !== 0) {
     map.g.selectAll("path").attr("fill", map.colorFill());
   }
 }
@@ -49,7 +56,7 @@ var id_to_isoa2 = {};
 var name_to_isoa2 = {};
 
 class Map {
-  constructor(trait) {
+  constructor() {
     /*Select Map SVG and set size*/
     const svg = d3.select("#map");
     svg.attr("width", WIDTH).attr("height", HEIGHT);
@@ -92,10 +99,8 @@ class Map {
         minAge = parseInt(xScale.invert(ext[0]));
         maxAge = parseInt(xScale.invert(ext[1]));
         d3.select("#ageTitle").text(`Selected age: ${minAge}-${maxAge}`);
-        if (chosenTrait !== "none") {
-          map.g
-            .selectAll("path")
-            .attr("fill", map.colorFill(chosenTrait, minAge, maxAge));
+        if (chosenTraitArr.length !== 0) {
+          map.g.selectAll("path").attr("fill", map.colorFill());
         }
       });
 
@@ -138,6 +143,7 @@ class Map {
 
       /* Compute stats (i.e. mean of each trait and count) for each country*/
       this.rawCSV = csvData;
+
       this.computeStats = function () {
         stats = {};
         var data = this.rawCSV;
@@ -149,7 +155,6 @@ class Map {
           var byAge = crossfilter(map.rawCSV).dimension((d) => d.sex);
           data = byAge.filter(chosenSex).top(Infinity);
         }
-        console.log(data.length);
 
         data.forEach((row) => {
           const country = row.country;
@@ -185,15 +190,24 @@ class Map {
       this.colorFill = function () {
         stats = this.computeStats();
 
-        var min = 1;
-        var max = 0;
+        let min = 0;
+        let max = 0;
+        let min_once = 1;
+        let max_once = 0;
 
-        Object.keys(stats).forEach((key) => {
-          if (stats[key].count >= MIN_OBS) {
-            max = Math.max(max, stats[key][chosenTrait]);
-            min = Math.min(min, stats[key][chosenTrait]);
-          }
+        chosenTraitArr.forEach((trait) => {
+          Object.keys(stats).forEach((key) => {
+            if (stats[key].count >= MIN_OBS) {
+              max_once = Math.max(max_once, stats[key][trait]);
+              min_once = Math.min(min_once, stats[key][trait]);
+            }
+          });
+          min += min_once;
+          max += max_once;
         });
+
+        min /= chosenTraitArr.length;
+        max /= chosenTraitArr.length;
 
         const colorScale = d3
           .scaleSequential(d3.interpolateRdYlGn)
@@ -202,13 +216,21 @@ class Map {
         return (d) => {
           var color;
           try {
-            color = colorScale(stats[id_to_isoa2[d.id]][chosenTrait]);
+            let val = 0;
+
+            chosenTraitArr.forEach((trait) => {
+              val += stats[id_to_isoa2[d.id]][trait];
+            });
+
+            val /= chosenTraitArr.length;
+
+            color = colorScale(val);
             const n_obs = stats[id_to_isoa2[d.id]].count;
             if (n_obs < MIN_OBS) {
               color = "lightgray";
             }
           } catch (e) {
-            console.log("Uncaught: ", id_to_isoa2[d.id]); /**/
+            //console.log("Uncaught: ", id_to_isoa2[d.id]); /**/
             color = "lightgray";
           }
           return color;
@@ -221,6 +243,8 @@ class Map {
         topoJSONdata.objects.countries
       );
       this.features = countries.features;
+
+      this.computeStats();
 
       this.countries = g
         .selectAll("path")
@@ -243,26 +267,38 @@ class Map {
           } catch (e) {
             title = "Unidentified";
           }
+
           return title;
         });
     });
   }
 }
 
-var map;
+let map;
 
 whenDocumentLoaded(() => {
-  map = new Map(chosenTrait);
+  map = new Map();
 });
 
-const selectElem = document.getElementById("open");
-console.log(selectElem);
+const selectElem = document.getElementsByClassName("flipswitch");
 
-selectElem.onchange = function (d) {
-  chosenTrait = d3.select(this).property("value");
-  if (chosenTrait === "none") {
-    map.g.selectAll("path").attr("fill", DEFAULTCOUNTRYCOLOR);
-  } else {
-    map.g.selectAll("path").attr("fill", map.colorFill());
-  }
-};
+for (let elem of selectElem) {
+  elem.onchange = function () {
+    if (elem.checked) {
+      chosenTraitArr.push(elem.name);
+    } else {
+      const index = chosenTraitArr.indexOf(elem.name);
+      if (index > -1) {
+        chosenTraitArr.splice(index, 1);
+      } else {
+        console.log("Element not found in array, what?");
+      }
+    }
+
+    if (chosenTraitArr.length === 0) {
+      map.g.selectAll("path").attr("fill", DEFAULTCOUNTRYCOLOR);
+    } else {
+      map.g.selectAll("path").attr("fill", map.colorFill());
+    }
+  };
+}
