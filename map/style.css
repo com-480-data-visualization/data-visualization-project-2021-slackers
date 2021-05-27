@@ -16,6 +16,13 @@ h1 {
 svg {
 }
 
+#axis {
+  stroke: #ffffff;
+  stroke-width: 0.08mm;
+  fill: #74b9a9;
+  fill-opacity: 0.2;
+}
+
 body {
   height: 100%;
   font-size: 16px;

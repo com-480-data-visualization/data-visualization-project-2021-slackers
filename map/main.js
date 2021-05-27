@@ -77,6 +77,7 @@ class Map {
 
     var ageAxis = scaleSvg
       .append("g")
+      .attr("id", "axis")
       .attr("transform", `translate(250,${scaleH / 2})`) // This controls the vertical position of the Axis
       .call(d3.axisBottom(xScale));
 
