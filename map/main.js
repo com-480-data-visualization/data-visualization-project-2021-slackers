@@ -15,9 +15,9 @@ const nameMap = {
 const projector =
   d3.geoNaturalEarth1(); /*geoNaturalEarth1, geoMercator, geopEquirectangular etc.*/
 const chosenTraitArr = [];
-var minAge = 0;
-var maxAge = 99;
-var chosenSex = "Both";
+let minAge = 0;
+let maxAge = 99;
+let chosenSex = "Both";
 
 const RES = highResolution ? 50 : 110;
 
@@ -148,12 +148,12 @@ class Map {
         stats = {};
         var data = this.rawCSV;
 
-        var byAge = crossfilter(map.rawCSV).dimension((d) => d.age);
+        const byAge = crossfilter(map.rawCSV).dimension((d) => d.age);
         data = byAge.filter([minAge, maxAge]).top(Infinity);
 
         if (chosenSex !== "Both") {
-          var byAge = crossfilter(map.rawCSV).dimension((d) => d.sex);
-          data = byAge.filter(chosenSex).top(Infinity);
+          const bySex = crossfilter(data).dimension((d) => d.sex);
+          data = bySex.filter(chosenSex).top(Infinity);
         }
 
         data.forEach((row) => {
