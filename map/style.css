@@ -1,3 +1,18 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100%;
+  font-size: 19px;
+  /*background: #97bece;*/
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  margin: 0;
+  text-align: center;
+}
+
 h1 {
   margin: 1em 0 0.5em 0;
   font-weight: 600;
@@ -11,45 +26,73 @@ h1 {
     inset 0 0 5px rgba(53, 86, 129, 0.5), inset -285px 0 35px white;
   border-radius: 0 10px 0 10px;
   background: #fff url(../images/Big_Five_1.png) no-repeat center left;
+  background-size: 150px;
+  min-height: 150px;
+  line-height: 150px;
 }
 
-.Openness
-{
-  background-image: url('../../images/openness.png');
+h2 {
+  margin: 0;
+}
+
+.Openness {
+  background-image: url("../../images/openness.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
+  min-height: 100vh;
+  position: relative;
 }
 
-.Agreeableness
-{
-  background-image: url('../../images/agreeableness.svg');
+.Agreeableness {
+  background-image: url("../../images/agreeableness.jpeg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
+  min-height: 100vh;
+  position: relative;
 }
 
-.Extroversion
-{
-  background-image: url('../../images/extroversion.jpeg');
+.Conscientiousness {
+  background-image: url("../../images/conscientiousness.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
+  min-height: 100vh;
+  position: relative;
+}
+
+.Extraversion {
+  background-image: url("../../images/extroversion.jpeg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
+  position: relative;
+}
+
+.Neuroticism {
+  background-image: url("../../images/neuroticism.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
+  position: relative;
+}
+
+.questions {
+  min-height: 100vh;
+  position: relative;
+}
+
+.next-section {
+  position: absolute;
+  bottom: 15px;
 }
 
 #axis {
   stroke: #ffffff;
   stroke-width: 0.2mm;
-}
-
-body {
-  height: 100%;
-  font-size: 16px;
-  /*background: #97bece;*/
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-  text-align: center;
 }
 
 @keyframes gradient {
@@ -120,9 +163,19 @@ body {
   fill: red;
 }
 
-ul {
-  padding: 10px;
-  display: inline-block;
+.col {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.row ul {
   text-align: left;
 }
 

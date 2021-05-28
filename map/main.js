@@ -298,3 +298,20 @@ for (let elem of selectElem) {
     }
   };
 }
+
+const buttons = document.getElementsByClassName("next-section");
+const sectionNames = [];
+for (const button of buttons) {
+  sectionNames.push(button.parentElement);
+}
+for (const button of buttons) {
+  button.onclick = function () {
+    const index = sectionNames.indexOf(this.parentElement);
+    if (index > -1) {
+      const elem = sectionNames[(index + 1) % sectionNames.length];
+      elem.scrollIntoView();
+    } else {
+      console.log("Sorry something went wrong. Are you sure the code is OK?");
+    }
+  };
+}
