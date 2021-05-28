@@ -13,8 +13,29 @@ h1 {
   background: #fff url(../images/Big_Five_1.png) no-repeat center left;
 }
 
-/*svg {
-}*/
+.Openness
+{
+  background-image: url('../../images/openness.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.Agreeableness
+{
+  background-image: url('../../images/agreeableness.svg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.Extroversion
+{
+  background-image: url('../../images/extroversion.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
 
 #axis {
   stroke: #ffffff;
