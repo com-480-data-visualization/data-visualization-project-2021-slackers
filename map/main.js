@@ -190,24 +190,20 @@ class Map {
       this.colorFill = function () {
         stats = this.computeStats();
 
-        let min = 0;
+        let min = 1;
         let max = 0;
-        let min_once = 1;
-        let max_once = 0;
 
-        chosenTraitArr.forEach((trait) => {
-          Object.keys(stats).forEach((key) => {
-            if (stats[key].count >= MIN_OBS) {
-              max_once = Math.max(max_once, stats[key][trait]);
-              min_once = Math.min(min_once, stats[key][trait]);
-            }
-          });
-          min += min_once;
-          max += max_once;
+        Object.keys(stats).forEach((key) => {
+          if (stats[key].count >= MIN_OBS) {
+            let totalStats = 0;
+            chosenTraitArr.forEach((trait) => {
+              totalStats += stats[key][trait];
+            });
+            totalStats /= chosenTraitArr.length;
+            max = Math.max(max, totalStats);
+            min = Math.min(min, totalStats);
+          }
         });
-
-        min /= chosenTraitArr.length;
-        max /= chosenTraitArr.length;
 
         const colorScale = d3
           .scaleSequential(d3.interpolateRdYlGn)
