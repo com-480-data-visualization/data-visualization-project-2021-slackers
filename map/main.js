@@ -55,6 +55,52 @@ var id_to_name = {};
 var id_to_isoa2 = {};
 var name_to_isoa2 = {};
 
+
+const colorInterpolator = d3.interpolateRdYlGn;
+const legendW = 40;
+const legendX = WIDTH - legendW;
+const legendY = 30;
+const legendH = 450;
+const legendRes = 100;
+
+var legendContainer = d3.select("#map").append("g").attr("id", "legend").attr("transform", `translate(${legendX},${legendY})`);
+
+
+
+function drawLegend(interpolator) {
+    var data = Array.from(Array(legendRes).keys());
+
+    var cScale = d3.scaleSequential()
+        .interpolator(interpolator)
+        .domain([0,legendRes-1]);
+
+    var xScale = d3.scaleLinear()
+        .domain([0,legendRes-1])
+        .range([0, legendH]);
+
+
+	legendContainer
+        .selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", (d) => legendH - Math.floor(xScale(d)))
+        .attr("width", legendW)
+		.attr("id", (d, i) => `minirect${i}`)
+        .attr("height", (d) => {
+            if (d == legendRes-1) {
+                return 6;
+            }
+            return Math.floor(xScale(d+1)) - Math.floor(xScale(d)) + 1;
+         })
+        .attr("fill", (d) => cScale(d));
+
+
+	legendContainer.append("text").attr("x", 0).attr("y", -5).text("High");
+	legendContainer.append("text").attr("x", 0).attr("y", legendH + 20).text("Low");
+  }
+
 class Map {
   constructor() {
     /*Select Map SVG and set size*/
@@ -63,7 +109,7 @@ class Map {
 
     /* Define the map projections*/
     const height = +svg.attr("height");
-    const width = +svg.attr("width");
+    const width = +svg.attr("width") - 2*legendW;
     const projection = projector
       .scale(width / 1.8 / Math.PI)
       .rotate([0, 0])
@@ -206,8 +252,9 @@ class Map {
         });
 
         const colorScale = d3
-          .scaleSequential(d3.interpolateRdYlGn)
+          .scaleSequential(colorInterpolator)
           .domain([min, max]);
+
 
         return (d) => {
           var color;
@@ -266,6 +313,10 @@ class Map {
 
           return title;
         });
+
+	drawLegend(colorInterpolator);
+	legendContainer.attr("display", "none")
+
     });
   }
 }
@@ -293,8 +344,10 @@ for (let elem of selectElem) {
 
     if (chosenTraitArr.length === 0) {
       map.g.selectAll("path").attr("fill", DEFAULTCOUNTRYCOLOR);
+	  legendContainer.attr("display", "none")
     } else {
       map.g.selectAll("path").attr("fill", map.colorFill());
+	  legendContainer.attr("display", "block")
     }
   };
 }
