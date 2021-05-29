@@ -117,7 +117,10 @@ a:active {
 }
 
 .questions {
-  min-height: 100vh;
+  background-image: url("../images/questions.svg");
+  background-repeat: no-repeat;
+  background-size: 100vh;
+  background-position: center;
   position: relative;
 }
 
