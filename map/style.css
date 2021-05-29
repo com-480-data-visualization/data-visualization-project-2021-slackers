@@ -118,6 +118,11 @@ h2 {
   position: relative;
 }
 
+#hist-container {
+  min-height: 100vh;
+  position: relative;
+}
+
 .Openness {
   background-image: url("../images/openness.png");
   background-repeat: no-repeat;
