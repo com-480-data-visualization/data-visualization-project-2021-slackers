@@ -6,7 +6,7 @@ body {
   height: 100%;
   font-size: 19px;
   /*background: #97bece;*/
-  background: linear-gradient(90deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background: linear-gradient(90deg, #b34a4a, #774659, #23a6d5, #23d5ab);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   margin: 0;
@@ -185,11 +185,6 @@ h2 {
   font-size: 16px;
 }
 
-#axis {
-  stroke: #ffffff;
-  stroke-width: 0.2mm;
-}
-
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
@@ -300,4 +295,19 @@ h2 {
 
 .radio-toolbar input[type="radio"]:checked + label {
   background-color: #bbb;
+}
+
+#age-title {
+  fill: white;
+  text-shadow: 3px 2px gray;
+  font-size: 25px;
+  font-family: sans-serif;
+}
+
+#axis {
+  stroke: #ffffff;
+  stroke-width: 0.4mm;
+  text-shadow: 3px 2px gray;
+  font-size: 25px;
+  font-family: sans-serif;
 }

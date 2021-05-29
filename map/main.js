@@ -98,12 +98,18 @@ function drawLegend(interpolator) {
     })
     .attr("fill", (d) => cScale(d));
 
-  legendContainer.append("text").attr("x", 0).attr("y", -5).text("High");
+  legendContainer
+    .append("text")
+    .attr("x", 0)
+    .attr("y", -5)
+    .text("High")
+    .style("stroke", "green");
   legendContainer
     .append("text")
     .attr("x", 0)
     .attr("y", legendH + 20)
-    .text("Low");
+    .text("Low")
+    .style("stroke", "red");
 }
 
 class Map {
@@ -149,7 +155,7 @@ class Map {
         const ext = d3.brushSelection(this);
         minAge = parseInt(xScale.invert(ext[0]));
         maxAge = parseInt(xScale.invert(ext[1]));
-        d3.select("#ageTitle").text(`Selected age: ${minAge}-${maxAge}`);
+        d3.select("#age-title").text(`Selected age: ${minAge}-${maxAge}`);
         if (chosenTraitArr.length !== 0) {
           map.g.selectAll("path").attr("fill", map.colorFill());
         }
@@ -159,7 +165,7 @@ class Map {
 
     scaleSvg
       .append("text")
-      .attr("id", "ageTitle")
+      .attr("id", "age-title")
       .attr("x", 10)
       .attr("y", 20)
       .text(`Selected age: ${minAge}-${maxAge}`);
