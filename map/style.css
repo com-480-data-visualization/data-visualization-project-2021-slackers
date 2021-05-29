@@ -92,6 +92,8 @@ h2 {
 }
 
 .odd {
+  list-style: none;
+  font-family: Tahoma, Verdana, sans-serif;
   background-color: black;
   color: white;
   opacity: 0.6;
@@ -111,6 +113,12 @@ h2 {
   text-align: justify;
   text-justify: inter-word;
   padding-left: 25%;
+}
+
+h2 {
+	font-family: 'Dancing Script', cursive;
+	font-size: 80px;
+	margin-bottom: 30px;
 }
 
 #main-page {
