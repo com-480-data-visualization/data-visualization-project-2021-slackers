@@ -26,103 +26,138 @@
   </head>
 
   <body>
-    <ul id="nav-bar">
-      <li class="nav-items"><a href="#questions">Questions</a></li>
-      <li class="nav-items"><a href="#neuroticism">Neuroticism</a></li>
-      <li class="nav-items"><a href="#conscientiousness">Conscientiousness</a></li>
-      <li class="nav-items"><a href="#agreeableness">Agreeableness</a></li>
-      <li class="nav-items"><a href="#extraversion">Extraversion</a></li>
-      <li class="nav-items"><a href="#first-trait">Openness</a></li>
-      <li class="nav-items"><a href="#map">Map</a></li>
-    </ul>
+    <div id="main-page">
+      <ul class="navigation">
+        <a href="#">
+          <li>
+            <h2>Home</h2>
+            <p>Welcome to our website</p>
+          </li>
+        </a>
+        <a href="#first-trait">
+          <li>
+            <h2>Openness</h2>
+            <p>Let go of certainty</p>
+          </li>
+        </a>
+        <a href="#extraversion">
+          <li>
+            <h2>Extroversion</h2>
+            <p>Better with people</p>
+          </li>
+        </a>
+        <a href="#agreeableness">
+          <li>
+            <h2>Agreeableness</h2>
+            <p>Consensus</p>
+          </li>
+        </a>
+        <a href="#conscientiousness">
+          <li>
+            <h2>Conscientiousness</h2>
+            <p>No pain no gain</p>
+          </li>
+        </a>
+        <a href="#neuroticism">
+          <li>
+            <h2>Neuroticism</h2>
+            <p>Stress & anxiety</p>
+          </li>
+        </a>
+        <a href="#questions">
+          <li>
+            <h2>Questions</h2>
+            <p>Common questions</p>
+          </li>
+        </a>
+      </ul>
 
+      <div id="traits-div">
+        <div class="items">
+          <label for="open">Openness</label
+          ><input
+            type="checkbox"
+            class="flipswitch"
+            id="open"
+            name="open"
+            value="open"
+          />
+        </div>
+        <div class="items">
+          <label for="extr">Extraversion</label>
+          <input
+            type="checkbox"
+            class="flipswitch"
+            id="extr"
+            name="extr"
+            value="extr"
+          />
+        </div>
+        <div class="items">
+          <label for="agre">Agreeableness</label>
+          <input
+            type="checkbox"
+            class="flipswitch"
+            id="agre"
+            name="agre"
+            value="agre"
+          />
+        </div>
+        <div class="items">
+          <label for="cons">Conscientiousness</label>
+          <input
+            type="checkbox"
+            class="flipswitch"
+            id="cons"
+            name="cons"
+            value="cons"
+          />
+        </div>
+        <div class="items">
+          <label for="neur">Neuroticism</label
+          ><input
+            type="checkbox"
+            class="flipswitch"
+            id="neur"
+            name="neur"
+            value="neur"
+          />
+        </div>
+      </div>
+      <br />
+      <svg id="map"></svg>
 
-    <h1>Personality types across the world</h1>
-
-    <div id="traits-div">
-      <div class="items">
-        <label for="open">Openness</label
-        ><input
-          type="checkbox"
-          class="flipswitch"
-          id="open"
-          name="open"
-          value="open"
-        />
-      </div>
-      <div class="items">
-        <label for="extr">Extraversion</label>
+      <svg id="ageScale"></svg>
+      <div class="radio-toolbar">
         <input
-          type="checkbox"
-          class="flipswitch"
-          id="extr"
-          name="extr"
-          value="extr"
+          type="radio"
+          name="gender"
+          id="male"
+          value="Male"
+          onclick="selectSex('Male')"
         />
-      </div>
-      <div class="items">
-        <label for="agre">Agreeableness</label>
+        <label for="male">Male</label>
         <input
-          type="checkbox"
-          class="flipswitch"
-          id="agre"
-          name="agre"
-          value="agre"
+          type="radio"
+          name="gender"
+          id="female"
+          value="Female"
+          onclick="selectSex('Female')"
         />
-      </div>
-      <div class="items">
-        <label for="cons">Conscientiousness</label>
+        <label for="female">Female</label>
         <input
-          type="checkbox"
-          class="flipswitch"
-          id="cons"
-          name="cons"
-          value="cons"
+          type="radio"
+          name="gender"
+          id="both"
+          value="Both"
+          onclick="selectSex('Both')"
+          checked
         />
-      </div>
-      <div class="items">
-        <label for="neur">Neuroticism</label
-        ><input
-          type="checkbox"
-          class="flipswitch"
-          id="neur"
-          name="neur"
-          value="neur"
-        />
+        <label for="both">Both</label>
       </div>
     </div>
-    <br />
-    <svg id="map"></svg>
 
-
-    <svg id="ageScale"></svg>
-    <div class="radio-toolbar">
-      <input
-        type="radio"
-        name="gender"
-        id="male"
-        value="Male"
-        onclick="selectSex('Male')"
-      />
-      <label for="male">Male</label>
-      <input
-        type="radio"
-        name="gender"
-        id="female"
-        value="Female"
-        onclick="selectSex('Female')"
-      />
-      <label for="female">Female</label>
-      <input
-        type="radio"
-        name="gender"
-        id="both"
-        value="Both"
-        onclick="selectSex('Both')"
-        checked
-      />
-      <label for="both">Both</label>
-    </div>
+    <!--<h1>Personality types across the world</h1>-->
 
     <br /><br />
 
@@ -222,7 +257,11 @@
       <button class="next-section">Next</button>
     </div>
 
-    <div class="Conscientiousness" id="conscientiousness" style="display: block">
+    <div
+      class="Conscientiousness"
+      id="conscientiousness"
+      style="display: block"
+    >
       <h2>Conscientiousness</h2>
 
       <p class="even">
@@ -424,7 +463,7 @@
         </div>
       </div>
       <br /><br /><br />
-      <button class="next-section">Top</button>
+      <button class="next-section">Home</button>
     </div>
   </body>
 </html>
