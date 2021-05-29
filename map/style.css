@@ -57,7 +57,8 @@ a:active {
   opacity: 0.6;
   padding-left: 30px;
   padding-right: 30px;
-  text-align: left;
+  text-align: justify;
+  text-justify: inter-word;
   padding-right: 25%;
 }
 
@@ -67,7 +68,8 @@ a:active {
   opacity: 0.6;
   padding-left: 30px;
   padding-right: 30px;
-  text-align: left;
+  text-align: justify;
+  text-justify: inter-word;
   padding-left: 25%;
 }
 
@@ -117,13 +119,25 @@ a:active {
 }
 
 .questions {
-  min-height: 100vh;
+  background-image: url("../images/questions.svg");
+  background-repeat: no-repeat;
+  background-size: 100vh;
+  background-position: center;
   position: relative;
 }
 
 .next-section {
   position: absolute;
   bottom: 15px;
+  opacity: 0.6;
+  border: none;
+  color: white;
+  background-color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 
 #axis {
