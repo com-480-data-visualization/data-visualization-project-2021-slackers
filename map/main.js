@@ -44,6 +44,7 @@ const chosenTraitArr = [];
 let minAge = 0;
 let maxAge = 99;
 let chosenSex = "Both";
+let selectedCountry = "none";
 
 const RES = highResolution ? 50 : 110;
 
@@ -74,6 +75,7 @@ function selectSex(s) {
   if (chosenTraitArr.length !== 0) {
     const t = d3.transition().duration(1000).ease(d3.easeLinear);
     map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
+	map.addPlot();
   }
 }
 
@@ -346,12 +348,16 @@ class Map {
         };
       };
 
-      this.addPlot = function (e) {
+      this.addPlot = function() {
         let data = this.rawCSV;
         const byCountry = crossfilter(data).dimension((d) => d.country);
-        data = byCountry.filter(id_to_isoa2[e["id"]]).top(Infinity);
+        data = byCountry.filter(id_to_isoa2[selectedCountry]).top(Infinity);
+		if (chosenSex !== "Both") {
+          const bySex = crossfilter(data).dimension((d) => d.sex);
+          data = bySex.filter(chosenSex).top(Infinity);
+        }
         let byAge = {};
-        var ages = Array.from(Array(100).keys()); /* All ages: 0-99*/
+        var ages = ["teen", "adult", "middle-aged", "senior"]
         ages.forEach((d) => {
           byAge[d] = [];
         });
@@ -361,7 +367,15 @@ class Map {
             score += d[trait];
           });
           score /= chosenTraitArr.length;
-          byAge[d.age].push(score);
+		  if (d.age < 20) {
+			  byAge["teen"].push(score);
+		  } else if (d.age < 40) {
+			  byAge["adult"].push(score);
+		  } else if (d.age < 60) {
+			  byAge["middle-aged"].push(score);
+		  } else {
+			  byAge["senior"].push(score);
+		  }
         });
 
         let means = [];
@@ -375,7 +389,7 @@ class Map {
           means.push(score);
         });
 
-        var margin = { top: 10, right: 30, bottom: 30, left: 40 },
+        var margin = { top: 10, right: 30, bottom: 100, left: 40 },
           width = 500 - margin.left - margin.right,
           height = 800 - margin.top - margin.bottom;
 
@@ -390,7 +404,7 @@ class Map {
             "transform",
             "translate(" + margin.left + "," + margin.top + ")"
           );
-        var x = d3.scaleBand().range([0, 600]).domain(ages).padding(0.2);
+        var x = d3.scaleBand().range([0, width]).domain(ages).padding(0.2);
 
         svg
           .append("g")
@@ -414,7 +428,7 @@ class Map {
           .enter()
           .append("rect")
           .attr("x", function (d, i) {
-            return x(i);
+            return x(ages[i]);
           })
           .attr("y", function (d, i) {
             return y(d);
@@ -456,6 +470,7 @@ class Map {
             alert("Please activate at least one of the traits!");
             return;
           }
+		  selectedCountry = e.id;
           this.addPlot(e);
           const elem = document.getElementById("hist-container");
           elem.style.display = "block";
