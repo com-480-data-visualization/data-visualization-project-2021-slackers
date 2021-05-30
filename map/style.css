@@ -6,9 +6,7 @@ body {
   height: 100%;
   font-size: 19px;
   /*background: #97bece;*/
-  background: linear-gradient(90deg, #b34a4a, #774659, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+  background: linear-gradient(90deg, #1d9bc9, #23d5ab);
   margin: 0;
   padding: 0;
   text-align: center;
@@ -103,10 +101,6 @@ h1 {
   margin-bottom: 0%;
 }
 
-ul {
-  margin: 0;
-}
-
 .even {
   background-color: black;
   color: white;
@@ -144,6 +138,10 @@ h2 {
   position: relative;
 }
 
+.Openness > ul {
+  margin: 0;
+}
+
 .Agreeableness {
   background-image: url("../images/agreeableness.jpeg");
   background-repeat: no-repeat;
@@ -151,6 +149,10 @@ h2 {
   background-size: cover;
   min-height: 100vh;
   position: relative;
+}
+
+.Agreeableness > ul {
+  margin: 0;
 }
 
 .Conscientiousness {
@@ -162,6 +164,10 @@ h2 {
   position: relative;
 }
 
+.Conscientiousness > ul {
+  margin: 0;
+}
+
 .Extraversion {
   background-image: url("../images/extroversion.jpeg");
   background-repeat: no-repeat;
@@ -169,6 +175,10 @@ h2 {
   background-size: cover;
   min-height: 100vh;
   position: relative;
+}
+
+.Extraversion > ul {
+  margin: 0;
 }
 
 .Neuroticism {
@@ -180,8 +190,13 @@ h2 {
   position: relative;
 }
 
+.Neuroticism > ul {
+  margin: 0;
+}
+
 .questions {
   background-image: url("../images/questions.svg");
+  background-color: white;
   background-repeat: no-repeat;
   background-size: 100vh;
   background-position: center;
@@ -302,9 +317,20 @@ h2 {
   fill: red;
 }
 
-.col {
+.col1 {
   float: left;
   width: 50%;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  margin-bottom: 10mm;
+}
+
+.col2 {
+  float: left;
+  width: 50%;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  margin-bottom: 10mm;
 }
 
 /* Clear floats after the columns */
@@ -314,8 +340,26 @@ h2 {
   clear: both;
 }
 
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  height: 150px;
+}
+
+img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+
 .row ul {
   text-align: left;
+  list-style: georgian;
+}
+.row h3 {
+  color: #1d9bc9;
+  background-color: orange;
+  width: 400px;
+  border-radius: 5mm;
 }
 
 .items {
