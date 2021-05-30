@@ -324,6 +324,7 @@ class Map {
 			  height = 400 - margin.top - margin.bottom;
 
 		  // append the svg object to the body of the page
+		  d3.select("#histogram").selectAll("g").remove()
 		  var svg = d3
 		      .select("#histogram")
 			  .attr("width", width + margin.left + margin.right)
@@ -337,6 +338,7 @@ class Map {
 			  .range([ 0, 600 ])
 			  .domain(ages)
 			  .padding(0.2);
+
 		  svg.append("g")
 		      .attr("transform", "translate(0," + height + ")")
 		      .call(d3.axisBottom(x))
@@ -347,11 +349,13 @@ class Map {
 			// Add Y axis
 		  var y = d3.scaleLinear()
 		      .domain([0, 1])
-			  .range([ height, 0]);
+			  .range([height, 0]);
 		  svg.append("g")
 		     .call(d3.axisLeft(y));
 
 			// Bars
+
+			svg.selectAll("rect").remove();
 			svg.selectAll("rect")
 				.data(means)
 				.enter()
