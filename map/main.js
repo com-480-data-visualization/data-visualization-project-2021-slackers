@@ -68,6 +68,12 @@ var legendContainer = d3
   .attr("id", "legend")
   .attr("transform", `translate(${legendX},${legendY})`);
 
+var grayRectContainer = d3
+  .select("#map")
+  .append("g")
+  .attr("id", "gray-rect")
+  .attr("transform", `translate(${legendX - legendW - 20},${legendY})`);
+
 function drawLegend(interpolator) {
   var data = Array.from(Array(legendRes).keys());
 
@@ -98,17 +104,35 @@ function drawLegend(interpolator) {
     })
     .attr("fill", (d) => cScale(d));
 
+  grayRectContainer
+    .append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", legendW)
+    .attr("height", 18)
+    .attr("fill", "lightgray");
+
+  grayRectContainer
+    .append("text")
+    .attr("x", 0)
+    .attr("y", -5)
+    .text(`< ${MIN_OBS}`)
+    .style("fill", "lightgray")
+    .style("stroke", "lightgray");
+
   legendContainer
     .append("text")
     .attr("x", 0)
     .attr("y", -5)
     .text("High")
+    .style("fill", "green")
     .style("stroke", "green");
   legendContainer
     .append("text")
     .attr("x", 0)
     .attr("y", legendH + 20)
     .text("Low")
+    .style("fill", "red")
     .style("stroke", "red");
 }
 
@@ -320,8 +344,8 @@ class Map {
         });
 
         var margin = { top: 10, right: 30, bottom: 30, left: 40 },
-          width = 460 - margin.left - margin.right,
-          height = 400 - margin.top - margin.bottom;
+          width = 500 - margin.left - margin.right,
+          height = 800 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
         d3.select("#histogram").selectAll("g").remove();
@@ -406,6 +430,7 @@ class Map {
 
       drawLegend(colorInterpolator);
       legendContainer.attr("display", "none");
+      grayRectContainer.attr("display", "none");
     });
   }
 }
@@ -434,9 +459,11 @@ for (let elem of selectElem) {
     if (chosenTraitArr.length === 0) {
       map.g.selectAll("path").attr("fill", DEFAULTCOUNTRYCOLOR);
       legendContainer.attr("display", "none");
+      grayRectContainer.attr("display", "none");
     } else {
       map.g.selectAll("path").attr("fill", map.colorFill());
       legendContainer.attr("display", "block");
+      grayRectContainer.attr("display", "block");
     }
   };
 }
