@@ -1,6 +1,7 @@
 const highResolution = true;
-const WIDTH = 1500;
-const HEIGHT = 800;
+const WIDTH =
+  window.innerWidth > 0 ? window.innerWidth * 0.95 : screen.width * 0.95;
+const HEIGHT = 650;
 const MIN_OBS = 10;
 const scaleH = 100;
 const DEFAULTCOUNTRYCOLOR = "gray";
