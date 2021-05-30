@@ -132,6 +132,7 @@ h2 {
 #hist-container {
   min-height: 100vh;
   position: relative;
+  display: none;
 }
 
 .Openness {

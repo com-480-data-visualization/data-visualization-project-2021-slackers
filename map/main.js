@@ -46,7 +46,8 @@ function whenDocumentLoaded(action) {
 function selectSex(s) {
   chosenSex = s;
   if (chosenTraitArr.length !== 0) {
-    map.g.selectAll("path").attr("fill", map.colorFill());
+    const t = d3.transition().duration(1000).ease(d3.easeLinear);
+    map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
   }
 }
 
@@ -87,6 +88,8 @@ function drawLegend(interpolator) {
     .domain([0, legendRes - 1])
     .range([0, legendH]);
 
+  const t = d3.transition().duration(1000).ease(d3.easeLinear);
+
   legendContainer
     .selectAll("rect")
     .data(data)
@@ -102,6 +105,7 @@ function drawLegend(interpolator) {
       }
       return Math.floor(xScale(d + 1)) - Math.floor(xScale(d)) + 1;
     })
+    .transition(t)
     .attr("fill", (d) => cScale(d));
 
   grayRectContainer
@@ -110,6 +114,7 @@ function drawLegend(interpolator) {
     .attr("y", 0)
     .attr("width", legendW)
     .attr("height", 18)
+    .transition(t)
     .attr("fill", "lightgray");
 
   grayRectContainer
@@ -172,16 +177,17 @@ class Map {
     const brush = d3
       .brushX()
       .extent([
-        [0, 0],
-        [WIDTH / 2, 20],
+        [0, -30],
+        [WIDTH / 2, 0],
       ])
-      .on("brush end", function brushended() {
+      .on("end", function brushended() {
         const ext = d3.brushSelection(this);
         minAge = parseInt(xScale.invert(ext[0]));
         maxAge = parseInt(xScale.invert(ext[1]));
         d3.select("#age-title").text(`Selected age: ${minAge}-${maxAge}`);
         if (chosenTraitArr.length !== 0) {
-          map.g.selectAll("path").attr("fill", map.colorFill());
+          const t = d3.transition().duration(1000).ease(d3.easeLinear);
+          map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
         }
       });
 
@@ -375,6 +381,7 @@ class Map {
         // Bars
 
         svg.selectAll("rect").remove();
+        const t = d3.transition().duration(1000).ease(d3.easeLinear);
         svg
           .selectAll("rect")
           .data(means)
@@ -390,6 +397,7 @@ class Map {
           .attr("height", function (d) {
             return height - y(d);
           })
+          .transition(t)
           .attr("fill", "black");
       };
 
@@ -402,6 +410,8 @@ class Map {
 
       this.computeStats();
 
+      const t = d3.transition().duration(1000).ease(d3.easeLinear);
+
       this.countries = g
         .selectAll("path")
         .data(this.features)
@@ -409,8 +419,13 @@ class Map {
         .append("path")
         .attr("class", "country")
         .on("click", (e) => {
+          if (chosenTraitArr.length === 0) {
+            alert("Please activate at least one of the traits!");
+            return;
+          }
           this.addPlot(e);
           const elem = document.getElementById("hist-container");
+          elem.style.display = "block";
           elem.scrollIntoView();
         })
         .attr("fill", DEFAULTCOUNTRYCOLOR)
@@ -456,12 +471,14 @@ for (let elem of selectElem) {
       }
     }
 
+    const t = d3.transition().duration(1000).ease(d3.easeLinear);
+
     if (chosenTraitArr.length === 0) {
-      map.g.selectAll("path").attr("fill", DEFAULTCOUNTRYCOLOR);
+      map.g.selectAll("path").transition(t).attr("fill", DEFAULTCOUNTRYCOLOR);
       legendContainer.attr("display", "none");
       grayRectContainer.attr("display", "none");
     } else {
-      map.g.selectAll("path").attr("fill", map.colorFill());
+      map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
       legendContainer.attr("display", "block");
       grayRectContainer.attr("display", "block");
     }
