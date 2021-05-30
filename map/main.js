@@ -35,7 +35,7 @@ const mapUnidentified = {
   PM: "Saint-Pierre-et-Miquelon",
   ST: "Sao Tome and Principe",
   SX: "Sint Maarten",
-  TJ: "Tajikistan"
+  TJ: "Tajikistan",
 };
 
 const projector =
@@ -192,8 +192,7 @@ class Map {
     var scaleSvg = d3
       .select("#ageScale")
       .attr("width", WIDTH)
-      .attr("height", scaleH)
-
+      .attr("height", scaleH);
 
     var ageAxis = scaleSvg
       .append("g")
@@ -461,14 +460,14 @@ class Map {
         .text((d) => {
           var title;
           try {
-            title = id_to_name[d.id] + " (" + stats[id_to_isoa2[d.id]].count + ")";
+            title =
+              id_to_name[d.id] + " (" + stats[id_to_isoa2[d.id]].count + ")";
           } catch (e) {
-			  if (d.id == "-99") {
-				  title = "Unidentified";
-			  } else {
-				  title = mapUnidentified[id_to_isoa2[d.id]] + "(0)";
-			  }
-
+            if (d.id == "-99") {
+              title = "Unidentified";
+            } else {
+              title = mapUnidentified[id_to_isoa2[d.id]] + "(0)";
+            }
           }
 
           return title;
@@ -480,8 +479,6 @@ class Map {
     });
   }
 }
-
-
 
 let map;
 
