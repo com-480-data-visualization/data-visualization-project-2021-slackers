@@ -12,6 +12,32 @@ const nameMap = {
   neur: "neuroticism",
 };
 
+const mapUnidentified = {
+  AX: "Aland Islands",
+  AM: "American Samoa",
+  TF: "French Southern Territories",
+  BL: "Saint-Barthélemy",
+  CD: "Democratic Republic of the Congo",
+  CW: "Curaçao",
+  GG: "Guernesey",
+  HM: "Heard Island and McDonald Islands",
+  IM: "Isle of Man",
+  JE: "Jersey",
+  KI: "Kiribati",
+  MF: "Saint-Martin",
+  ME: "Montenegro",
+  MP: "Northern Mariana Islands",
+  NR: "Nauru",
+  PS: "Palestine",
+  EH: "Western Sahara",
+  SS: "South Sudan",
+  GS: "South Georgia",
+  PM: "Saint-Pierre-et-Miquelon",
+  ST: "Sao Tome and Principe",
+  SX: "Sint Maarten",
+  TJ: "Tajikistan"
+};
+
 const projector =
   d3.geoNaturalEarth1(); /*geoNaturalEarth1, geoMercator, geopEquirectangular etc.*/
 const chosenTraitArr = [];
@@ -137,7 +163,8 @@ class Map {
     var scaleSvg = d3
       .select("#ageScale")
       .attr("width", WIDTH)
-      .attr("height", scaleH);
+      .attr("height", scaleH)
+
 
     var ageAxis = scaleSvg
       .append("g")
@@ -148,8 +175,8 @@ class Map {
     const brush = d3
       .brushX()
       .extent([
-        [0, 0],
-        [WIDTH / 2, 20],
+        [0, -30],
+        [WIDTH / 2, 0],
       ])
       .on("brush end", function brushended() {
         const ext = d3.brushSelection(this);
@@ -283,7 +310,7 @@ class Map {
               color = "lightgray";
             }
           } catch (e) {
-            //console.log("Uncaught: ", id_to_isoa2[d.id]); /**/
+            console.log("Uncaught: ", id_to_isoa2[d.id]); /**/
             color = "lightgray";
           }
           return color;
@@ -394,10 +421,14 @@ class Map {
         .text((d) => {
           var title;
           try {
-            title =
-              id_to_name[d.id] + " (" + stats[id_to_isoa2[d.id]].count + ")";
+            title = id_to_name[d.id] + " (" + stats[id_to_isoa2[d.id]].count + ")";
           } catch (e) {
-            title = "Unidentified";
+			  if (d.id == "-99") {
+				  title = "Unidentified";
+			  } else {
+				  title = mapUnidentified[id_to_isoa2[d.id]] + "(0)";
+			  }
+
           }
 
           return title;
@@ -408,6 +439,8 @@ class Map {
     });
   }
 }
+
+
 
 let map;
 
