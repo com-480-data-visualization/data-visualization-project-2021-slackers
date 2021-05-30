@@ -1,6 +1,6 @@
 const highResolution = true;
 const WIDTH =
-  window.innerWidth > 0 ? window.innerWidth * 0.95 : screen.width * 0.95;
+  window.innerWidth > 0 ? window.innerWidth * 0.65 : screen.width * 0.65;
 const HEIGHT = 650;
 const MIN_OBS = 10;
 const scaleH = 100;
