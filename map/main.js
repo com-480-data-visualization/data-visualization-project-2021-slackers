@@ -529,6 +529,7 @@ for (let elem of selectElem) {
 }
 
 const buttons = document.getElementsByClassName("next-section");
+const buttonsPrev = document.getElementsByClassName("prev-section");
 const sectionNames = [];
 for (const button of buttons) {
   sectionNames.push(button.parentElement);
@@ -542,6 +543,22 @@ for (const button of buttons) {
         elem.scrollIntoView();
       } else {
         const elem = sectionNames[(index + 1) % sectionNames.length];
+        elem.scrollIntoView();
+      }
+    } else {
+      console.log("Sorry something went wrong. Are you sure the code is OK?");
+    }
+  };
+}
+for (const button of buttonsPrev) {
+  button.onclick = function () {
+    const index = sectionNames.indexOf(this.parentElement);
+    if (index > -1) {
+      if (index === 0) {
+        const elem = document.getElementById("main-page");
+        elem.scrollIntoView();
+      } else {
+        const elem = sectionNames[(index - 1) % sectionNames.length];
         elem.scrollIntoView();
       }
     } else {
