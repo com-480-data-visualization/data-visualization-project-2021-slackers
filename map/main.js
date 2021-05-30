@@ -94,6 +94,12 @@ var legendContainer = d3
   .attr("id", "legend")
   .attr("transform", `translate(${legendX},${legendY})`);
 
+var grayRectContainer = d3
+  .select("#map")
+  .append("g")
+  .attr("id", "gray-rect")
+  .attr("transform", `translate(${legendX - legendW - 20},${legendY})`);
+
 function drawLegend(interpolator) {
   var data = Array.from(Array(legendRes).keys());
 
@@ -124,17 +130,35 @@ function drawLegend(interpolator) {
     })
     .attr("fill", (d) => cScale(d));
 
+  grayRectContainer
+    .append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", legendW)
+    .attr("height", 18)
+    .attr("fill", "lightgray");
+
+  grayRectContainer
+    .append("text")
+    .attr("x", 0)
+    .attr("y", -5)
+    .text(`< ${MIN_OBS}`)
+    .style("fill", "lightgray")
+    .style("stroke", "lightgray");
+
   legendContainer
     .append("text")
     .attr("x", 0)
     .attr("y", -5)
     .text("High")
+    .style("fill", "green")
     .style("stroke", "green");
   legendContainer
     .append("text")
     .attr("x", 0)
     .attr("y", legendH + 20)
     .text("Low")
+    .style("fill", "red")
     .style("stroke", "red");
 }
 
@@ -317,85 +341,84 @@ class Map {
         };
       };
 
-	  this.addPlot = function (e) {
-		  let data = this.rawCSV;
-		  const byCountry = crossfilter(data).dimension((d) => d.country);
-		  data = byCountry.filter(id_to_isoa2[e["id"]]).top(Infinity);
-		  let byAge = {};
-		  var ages = Array.from(Array(100).keys()); /* All ages: 0-99*/
-		  ages.forEach(d => {
-			  byAge[d] = [];
-		  });
-		  data.forEach(d => {
-			  let score = 0;
-			  chosenTraitArr.forEach((trait) => {
-				  score += d[trait]
-			  });
-			  score /= chosenTraitArr.length;
-			  byAge[d.age].push(score);
-		  });
+      this.addPlot = function (e) {
+        let data = this.rawCSV;
+        const byCountry = crossfilter(data).dimension((d) => d.country);
+        data = byCountry.filter(id_to_isoa2[e["id"]]).top(Infinity);
+        let byAge = {};
+        var ages = Array.from(Array(100).keys()); /* All ages: 0-99*/
+        ages.forEach((d) => {
+          byAge[d] = [];
+        });
+        data.forEach((d) => {
+          let score = 0;
+          chosenTraitArr.forEach((trait) => {
+            score += d[trait];
+          });
+          score /= chosenTraitArr.length;
+          byAge[d.age].push(score);
+        });
 
-		  let means = [];
-		  ages.forEach(age => {
-			  let L = byAge[age].length
-			  let score = 0;
-			  if (L > 0) {
-				  score = byAge[age].reduce((a, b) => a + b, 0);
-				  score /= L;
-			  }
-			  means.push(score);
-		  });
+        let means = [];
+        ages.forEach((age) => {
+          let L = byAge[age].length;
+          let score = 0;
+          if (L > 0) {
+            score = byAge[age].reduce((a, b) => a + b, 0);
+            score /= L;
+          }
+          means.push(score);
+        });
 
-		  var margin = { top: 10, right: 30, bottom: 30, left: 40 },
-		      width = 460 - margin.left - margin.right,
-			  height = 400 - margin.top - margin.bottom;
+        var margin = { top: 10, right: 30, bottom: 30, left: 40 },
+          width = 500 - margin.left - margin.right,
+          height = 800 - margin.top - margin.bottom;
 
-		  // append the svg object to the body of the page
-		  d3.select("#histogram").selectAll("g").remove()
-		  var svg = d3
-		      .select("#histogram")
-			  .attr("width", width + margin.left + margin.right)
-			  .attr("height", height + margin.top + margin.bottom)
-			  .append("g")
-			  .attr(
-				"transform",
-				"translate(" + margin.left + "," + margin.top + ")"
-			  );
-		  var x = d3.scaleBand()
-			  .range([ 0, 600 ])
-			  .domain(ages)
-			  .padding(0.2);
+        // append the svg object to the body of the page
+        d3.select("#histogram").selectAll("g").remove();
+        var svg = d3
+          .select("#histogram")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+          );
+        var x = d3.scaleBand().range([0, 600]).domain(ages).padding(0.2);
 
-		  svg.append("g")
-		      .attr("transform", "translate(0," + height + ")")
-		      .call(d3.axisBottom(x))
-		      .selectAll("text")
-		      .attr("transform", "translate(-10,0)rotate(-45)")
-			  .style("text-anchor", "end");
+        svg
+          .append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x))
+          .selectAll("text")
+          .attr("transform", "translate(-10,0)rotate(-45)")
+          .style("text-anchor", "end");
 
-			// Add Y axis
-		  var y = d3.scaleLinear()
-		      .domain([0, 1])
-			  .range([height, 0]);
-		  svg.append("g")
-		     .call(d3.axisLeft(y));
+        // Add Y axis
+        var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+        svg.append("g").call(d3.axisLeft(y));
 
-			// Bars
+        // Bars
 
-			svg.selectAll("rect").remove();
-			svg.selectAll("rect")
-				.data(means)
-				.enter()
-				.append("rect")
-				.attr("x", function(d, i) {
-					return x(i); })
-				.attr("y", function(d, i) { return y(d); })
-				.attr("width", x.bandwidth())
-				.attr("height", function(d) { return height - y(d); })
-				.attr("fill", "black")
-
-	  };
-
+        svg.selectAll("rect").remove();
+        svg
+          .selectAll("rect")
+          .data(means)
+          .enter()
+          .append("rect")
+          .attr("x", function (d, i) {
+            return x(i);
+          })
+          .attr("y", function (d, i) {
+            return y(d);
+          })
+          .attr("width", x.bandwidth())
+          .attr("height", function (d) {
+            return height - y(d);
+          })
+          .attr("fill", "black");
+      };
 
       /* Draw all topojson countries*/
       const countries = topojson.feature(
@@ -414,6 +437,8 @@ class Map {
         .attr("class", "country")
         .on("click", (e) => {
           this.addPlot(e);
+          const elem = document.getElementById("hist-container");
+          elem.scrollIntoView();
         })
         .attr("fill", DEFAULTCOUNTRYCOLOR)
         .attr("d", pathGenerator)
@@ -436,6 +461,7 @@ class Map {
 
       drawLegend(colorInterpolator);
       legendContainer.attr("display", "none");
+      grayRectContainer.attr("display", "none");
     });
   }
 }
@@ -466,9 +492,11 @@ for (let elem of selectElem) {
     if (chosenTraitArr.length === 0) {
       map.g.selectAll("path").attr("fill", DEFAULTCOUNTRYCOLOR);
       legendContainer.attr("display", "none");
+      grayRectContainer.attr("display", "none");
     } else {
       map.g.selectAll("path").attr("fill", map.colorFill());
       legendContainer.attr("display", "block");
+      grayRectContainer.attr("display", "block");
     }
   };
 }
@@ -494,3 +522,9 @@ for (const button of buttons) {
     }
   };
 }
+
+const histButton = document.getElementById("hist-button");
+histButton.onclick = function () {
+  const elem = document.getElementById("main-page");
+  elem.scrollIntoView();
+};
