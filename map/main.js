@@ -1,6 +1,6 @@
 const highResolution = true;
-const WIDTH = 960;
-const HEIGHT = 500;
+const WIDTH = 1500;
+const HEIGHT = 800;
 const MIN_OBS = 10;
 const scaleH = 100;
 const DEFAULTCOUNTRYCOLOR = "gray";
@@ -438,6 +438,13 @@ class Map {
 
       const t = d3.transition().duration(1000).ease(d3.easeLinear);
 
+      // Define the div for the tooltip
+      const div = d3
+        .select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("display", "none");
+
       this.countries = g
         .selectAll("path")
         .data(this.features)
@@ -454,11 +461,8 @@ class Map {
           elem.style.display = "block";
           elem.scrollIntoView();
         })
-        .attr("fill", DEFAULTCOUNTRYCOLOR)
-        .attr("d", pathGenerator)
-        .append("title")
-        .text((d) => {
-          var title;
+        .on("mouseover", (d) => {
+          let title;
           try {
             title =
               id_to_name[d.id] + " (" + stats[id_to_isoa2[d.id]].count + ")";
@@ -466,12 +470,21 @@ class Map {
             if (d.id == "-99") {
               title = "Unidentified";
             } else {
-              title = mapUnidentified[id_to_isoa2[d.id]] + "(0)";
+              title = mapUnidentified[id_to_isoa2[d.id]] + " (0)";
             }
           }
 
-          return title;
-        });
+          div.style("display", "block");
+          div
+            .html(title)
+            .style("left", d3.event.pageX + 50 + "px")
+            .style("top", d3.event.pageY - 50 + "px");
+        })
+        .on("mouseout", function () {
+          div.style("display", "none");
+        })
+        .attr("fill", DEFAULTCOUNTRYCOLOR)
+        .attr("d", pathGenerator);
 
       drawLegend(colorInterpolator);
       legendContainer.attr("display", "none");
