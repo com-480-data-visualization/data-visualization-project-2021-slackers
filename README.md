@@ -54,3 +54,5 @@ The two-page document for the submission for milestone 2 can be found [here](./M
 ## Milestone 3
 
 The process book for the submission for milestone 3 can be found [here](./DataViz_process_book.pdf).
+
+The two-minute-long video for screencast can be found [here](./Screencast.webm).
