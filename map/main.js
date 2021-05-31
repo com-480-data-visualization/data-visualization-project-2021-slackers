@@ -75,7 +75,7 @@ function selectSex(s) {
   if (chosenTraitArr.length !== 0) {
     const t = d3.transition().duration(1000).ease(d3.easeLinear);
     map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
-	map.addPlot();
+    map.addPlot();
   }
 }
 
@@ -348,16 +348,28 @@ class Map {
         };
       };
 
-      this.addPlot = function() {
+      // Define the div for the tooltip
+      const div = d3
+        .select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("display", "none");
+
+      this.addPlot = function () {
         let data = this.rawCSV;
         const byCountry = crossfilter(data).dimension((d) => d.country);
         data = byCountry.filter(id_to_isoa2[selectedCountry]).top(Infinity);
-		if (chosenSex !== "Both") {
+        if (chosenSex !== "Both") {
           const bySex = crossfilter(data).dimension((d) => d.sex);
           data = bySex.filter(chosenSex).top(Infinity);
         }
         let byAge = {};
-        var ages = ["teenagers (<20)", "young adults (20-39)", "middle-aged adults (40-59)", "senior (60+)"]
+        var ages = [
+          "teenagers (<20)",
+          "young adults (20-39)",
+          "middle-aged adults (40-59)",
+          "senior (60+)",
+        ];
         ages.forEach((d) => {
           byAge[d] = [];
         });
@@ -367,15 +379,15 @@ class Map {
             score += d[trait];
           });
           score /= chosenTraitArr.length;
-		  if (d.age < 20) {
-			  byAge["teenagers (<20)"].push(score);
-		  } else if (d.age < 40) {
-			  byAge["young adults (20-39)"].push(score);
-		  } else if (d.age < 60) {
-			  byAge["middle-aged adults (40-59)"].push(score);
-		  } else {
-			  byAge["senior (60+)"].push(score);
-		  }
+          if (d.age < 20) {
+            byAge["teenagers (<20)"].push(score);
+          } else if (d.age < 40) {
+            byAge["young adults (20-39)"].push(score);
+          } else if (d.age < 60) {
+            byAge["middle-aged adults (40-59)"].push(score);
+          } else {
+            byAge["senior (60+)"].push(score);
+          }
         });
 
         let means = [];
@@ -398,7 +410,7 @@ class Map {
         var svg = d3
           .select("#histogram")
           .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
+          .attr("height", height + margin.top + margin.bottom + 80)
           .append("g")
           .attr(
             "transform",
@@ -411,31 +423,34 @@ class Map {
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x))
           .selectAll("text")
-		  .style("font-size", "24px")
+          .style("font-size", "24px")
+          .style("text-anchor", "center")
+          .attr("transform", "translate(0,20)rotate(-10)");
+
+        let title = "Mean ";
+        let i = 0;
+        while (i < chosenTraitArr.length) {
+          title += nameMap[chosenTraitArr[i]];
+          if (i < chosenTraitArr.length - 1) {
+            title += " + ";
+          }
+          i += 1;
+        }
+
+        title += " in " + id_to_name[selectedCountry];
+        if (chosenSex === "Male") {
+          title += " (men)";
+        }
+        if (chosenSex === "Female") {
+          title += " (women)";
+        }
+        svg
+          .append("text")
+          .attr("x", 30)
+          .attr("y", 10)
+          .text(title)
+          .style("font-size", "32px")
           .style("text-anchor", "center");
-
-	   let title = "Mean "
-	   let i = 0
-	   while (i < chosenTraitArr.length) {
-		   title += nameMap[chosenTraitArr[i]];
-		   if (i < chosenTraitArr.length -1) {
-			   title += " + ";
-		   }
-		   i += 1
-	   }
-
-	   title += " in " + id_to_name[selectedCountry];
-	   if (chosenSex === "Male") {
-		 title += " (men)";
-	 } if (chosenSex === "Female") {
-		 title += " (women)";
-	   }
-	   svg.append("text")
-	       .attr("x", 30)
-		   .attr("y", 10)
-		   .text(title)
-		   .style("font-size", "32px")
-		   .style("text-anchor", "center");
 
         // Add Y axis
         var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
@@ -444,7 +459,6 @@ class Map {
         // Bars
 
         svg.selectAll("rect").remove();
-        const t = d3.transition().duration(1000).ease(d3.easeLinear);
         svg
           .selectAll("rect")
           .data(means)
@@ -456,12 +470,25 @@ class Map {
           .attr("y", function (d, i) {
             return y(d);
           })
+          .attr("class", function (d, i) {
+            return "hist-rect-" + i;
+          })
           .attr("width", x.bandwidth())
           .attr("height", function (d) {
             return height - y(d);
           })
-          .transition(t)
-          .attr("fill", "black");
+          .on("mouseover", function (d) {
+            let L = byAge[ages[this.className.animVal.slice(-1)]].length;
+
+            div.style("display", "block");
+            div
+              .html("Count: " + L)
+              .style("left", d3.event.pageX + 15 + "px")
+              .style("top", d3.event.pageY + "px");
+          })
+          .on("mouseout", function () {
+            div.style("display", "none");
+          });
       };
 
       /* Draw all topojson countries*/
@@ -472,15 +499,6 @@ class Map {
       this.features = countries.features;
 
       this.computeStats();
-
-      const t = d3.transition().duration(1000).ease(d3.easeLinear);
-
-      // Define the div for the tooltip
-      const div = d3
-        .select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("display", "none");
 
       this.countries = g
         .selectAll("path")
@@ -493,7 +511,7 @@ class Map {
             alert("Please activate at least one of the traits!");
             return;
           }
-		  selectedCountry = e.id;
+          selectedCountry = e.id;
           this.addPlot(e);
           const elem = document.getElementById("hist-container");
           elem.style.display = "block";
@@ -564,7 +582,7 @@ for (let elem of selectElem) {
       grayRectContainer.attr("display", "block");
     }
 
-	map.addPlot();
+    map.addPlot();
   };
 }
 
