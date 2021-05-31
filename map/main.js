@@ -450,7 +450,7 @@ class Map {
           .attr("x", 30)
           .attr("y", 10)
           .text(title)
-          .style("font-size", "32px")
+          .style("font-size", "24px")
           .style("text-anchor", "center");
 
         // Add Y axis
