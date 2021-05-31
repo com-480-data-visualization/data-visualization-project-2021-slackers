@@ -341,7 +341,7 @@ class Map {
               color = "lightgray";
             }
           } catch (e) {
-            console.log("Uncaught: ", id_to_isoa2[d.id]); /**/
+            /*console.log("Uncaught: ", id_to_isoa2[d.id]); */
             color = "lightgray";
           }
           return color;
@@ -357,7 +357,7 @@ class Map {
           data = bySex.filter(chosenSex).top(Infinity);
         }
         let byAge = {};
-        var ages = ["teen", "adult", "middle-aged", "senior"]
+        var ages = ["teenagers (<20)", "young adults (20-39)", "middle-aged adults (40-59)", "senior (60+)"]
         ages.forEach((d) => {
           byAge[d] = [];
         });
@@ -368,13 +368,13 @@ class Map {
           });
           score /= chosenTraitArr.length;
 		  if (d.age < 20) {
-			  byAge["teen"].push(score);
+			  byAge["teenagers (<20)"].push(score);
 		  } else if (d.age < 40) {
-			  byAge["adult"].push(score);
+			  byAge["young adults (20-39)"].push(score);
 		  } else if (d.age < 60) {
-			  byAge["middle-aged"].push(score);
+			  byAge["middle-aged adults (40-59)"].push(score);
 		  } else {
-			  byAge["senior"].push(score);
+			  byAge["senior (60+)"].push(score);
 		  }
         });
 
@@ -390,8 +390,8 @@ class Map {
         });
 
         var margin = { top: 10, right: 30, bottom: 100, left: 40 },
-          width = 500 - margin.left - margin.right,
-          height = 800 - margin.top - margin.bottom;
+          width = WIDTH - margin.left - margin.right,
+          height = HEIGHT - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
         d3.select("#histogram").selectAll("g").remove();
@@ -411,8 +411,31 @@ class Map {
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x))
           .selectAll("text")
-          .attr("transform", "translate(-10,0)rotate(-45)")
-          .style("text-anchor", "end");
+		  .style("font-size", "24px")
+          .style("text-anchor", "center");
+
+	   let title = "Mean "
+	   let i = 0
+	   while (i < chosenTraitArr.length) {
+		   title += nameMap[chosenTraitArr[i]];
+		   if (i < chosenTraitArr.length -1) {
+			   title += " + ";
+		   }
+		   i += 1
+	   }
+
+	   title += " in " + id_to_name[selectedCountry];
+	   if (chosenSex === "Male") {
+		 title += " (men)";
+	 } if (chosenSex === "Female") {
+		 title += " (women)";
+	   }
+	   svg.append("text")
+	       .attr("x", 30)
+		   .attr("y", 10)
+		   .text(title)
+		   .style("font-size", "32px")
+		   .style("text-anchor", "center");
 
         // Add Y axis
         var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
@@ -540,6 +563,8 @@ for (let elem of selectElem) {
       legendContainer.attr("display", "block");
       grayRectContainer.attr("display", "block");
     }
+
+	map.addPlot();
   };
 }
 
