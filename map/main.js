@@ -581,8 +581,6 @@ for (let elem of selectElem) {
       legendContainer.attr("display", "block");
       grayRectContainer.attr("display", "block");
     }
-
-    map.addPlot();
   };
 }
 
