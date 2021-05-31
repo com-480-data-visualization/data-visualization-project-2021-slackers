@@ -411,7 +411,7 @@ img:hover {
 }
 
 #histogram {
-  font-size: 50px;
+  fill: white;
 }
 
 #histogram .hist-rect-0 {
@@ -533,42 +533,42 @@ img:hover {
   }
 }
 
-
 @keyframes move-background {
   from {
     -webkit-transform: translate3d(0px, 0px, 0px);
- }
+  }
   to {
     -webkit-transform: translate3d(1000px, 0px, 0px);
- }
+  }
 }
 @-webkit-keyframes move-background {
   from {
     -webkit-transform: translate3d(0px, 0px, 0px);
- }
+  }
   to {
     -webkit-transform: translate3d(1000px, 0px, 0px);
- }
+  }
 }
 @-moz-keyframes move-background {
   from {
     -webkit-transform: translate3d(0px, 0px, 0px);
- }
+  }
   to {
     -webkit-transform: translate3d(1000px, 0px, 0px);
- }
+  }
 }
 @-webkit-keyframes move-background {
   from {
     -webkit-transform: translate3d(0px, 0px, 0px);
- }
+  }
   to {
     -webkit-transform: translate3d(1000px, 0px, 0px);
- }
+  }
 }
 
 .stars {
-  background: black url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat;
+  background: black
+    url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -578,7 +578,7 @@ img:hover {
   z-index: 0;
 }
 .imgmoon {
-  border-color:black;
+  border-color: black;
   height: 15vh;
   width: 15vh;
   position: absolute;

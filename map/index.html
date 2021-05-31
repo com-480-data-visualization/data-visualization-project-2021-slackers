@@ -28,100 +28,148 @@
   <body>
     <div id="main-page">
       <div class="stars">
-      <ul class="navigation">
-        <a href="#">
-          <li>
-            <h2>Home</h2>
-            <p>Welcome to our website</p>
-          </li>
-        </a>
-        <a href="#first-trait">
-          <li>
-            <h2>Openness</h2>
-            <p>Let go of certainty</p>
-          </li>
-        </a>
-        <a href="#extraversion">
-          <li>
-            <h2>Extroversion</h2>
-            <p>Better with people</p>
-          </li>
-        </a>
-        <a href="#agreeableness">
-          <li>
-            <h2>Agreeableness</h2>
-            <p>Consensus</p>
-          </li>
-        </a>
-        <a href="#conscientiousness">
-          <li>
-            <h2>Conscientiousness</h2>
-            <p>No pain no gain</p>
-          </li>
-        </a>
-        <a href="#neuroticism">
-          <li>
-            <h2>Neuroticism</h2>
-            <p>Stress & anxiety</p>
-          </li>
-        </a>
-        <a href="#questions">
-          <li>
-            <h2>Questions</h2>
-            <p>Common questions</p>
-          </li>
-        </a>
-      </ul>
-      <img class = "imgmoon"src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/moon2.png" alt="">
-      <div id="traits-div">
-        <div class="help-tip">
-          <p>
-            Switch the traits of investigation on. You can activate multiple
-            switches if you would like to investigate multiple traits jointly.
-            After activating switches, click on a country to visualize bar
-            charts.
-          </p>
+        <ul class="navigation">
+          <a href="#">
+            <li>
+              <h2>Home</h2>
+              <p>Welcome to our website</p>
+            </li>
+          </a>
+          <a href="#first-trait">
+            <li>
+              <h2>Openness</h2>
+              <p>Let go of certainty</p>
+            </li>
+          </a>
+          <a href="#extraversion">
+            <li>
+              <h2>Extroversion</h2>
+              <p>Better with people</p>
+            </li>
+          </a>
+          <a href="#agreeableness">
+            <li>
+              <h2>Agreeableness</h2>
+              <p>Consensus</p>
+            </li>
+          </a>
+          <a href="#conscientiousness">
+            <li>
+              <h2>Conscientiousness</h2>
+              <p>No pain no gain</p>
+            </li>
+          </a>
+          <a href="#neuroticism">
+            <li>
+              <h2>Neuroticism</h2>
+              <p>Stress & anxiety</p>
+            </li>
+          </a>
+          <a href="#questions">
+            <li>
+              <h2>Questions</h2>
+              <p>Common questions</p>
+            </li>
+          </a>
+        </ul>
+        <img
+          class="imgmoon"
+          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/moon2.png"
+          alt=""
+        />
+        <div id="traits-div">
+          <div class="help-tip">
+            <p>
+              Switch the traits of investigation on. You can activate multiple
+              switches if you would like to investigate multiple traits jointly.
+              After activating switches, click on a country to visualize bar
+              charts.
+            </p>
+          </div>
+          <div class="items">
+            <label for="open">Openness</label
+            ><input
+              type="checkbox"
+              class="flipswitch"
+              id="open"
+              name="open"
+              value="open"
+            />
+          </div>
+          <div class="items">
+            <label for="extr">Extroversion</label>
+            <input
+              type="checkbox"
+              class="flipswitch"
+              id="extr"
+              name="extr"
+              value="extr"
+            />
+          </div>
+          <div class="items">
+            <label for="agre">Agreeableness</label>
+            <input
+              type="checkbox"
+              class="flipswitch"
+              id="agre"
+              name="agre"
+              value="agre"
+            />
+          </div>
+          <div class="items">
+            <label for="cons">Conscientiousness</label>
+            <input
+              type="checkbox"
+              class="flipswitch"
+              id="cons"
+              name="cons"
+              value="cons"
+            />
+          </div>
+          <div class="items">
+            <label for="neur">Neuroticism</label
+            ><input
+              type="checkbox"
+              class="flipswitch"
+              id="neur"
+              name="neur"
+              value="neur"
+            />
+          </div>
         </div>
-        <div class="items">
-          <label for="open">Openness</label
-          ><input
-            type="checkbox"
-            class="flipswitch"
-            id="open"
-            name="open"
-            value="open"
-          />
-        </div>
-        <div class="items">
-          <label for="extr">Extroversion</label>
+        <br />
+        <svg id="map"></svg>
+
+        <svg id="ageScale"></svg>
+
+        <div class="radio-toolbar">
           <input
-            type="checkbox"
-            class="flipswitch"
-            id="extr"
-            name="extr"
-            value="extr"
+            type="radio"
+            name="gender"
+            id="male"
+            value="Male"
+            onclick="selectSex('Male')"
           />
-        </div>
-        <div class="items">
-          <label for="agre">Agreeableness</label>
+          <label for="male">Male</label>
           <input
-            type="checkbox"
-            class="flipswitch"
-            id="agre"
-            name="agre"
-            value="agre"
+            type="radio"
+            name="gender"
+            id="female"
+            value="Female"
+            onclick="selectSex('Female')"
           />
-        </div>
-        <div class="items">
-          <label for="cons">Conscientiousness</label>
+          <label for="female">Female</label>
           <input
-            type="checkbox"
-            class="flipswitch"
-            id="cons"
-            name="cons"
-            value="cons"
+            type="radio"
+            name="gender"
+            id="both"
+            value="Both"
+            onclick="selectSex('Both')"
+            checked
           />
+          <label for="both">Both</label>
         </div>
+<<<<<<< HEAD
         <div class="items">
           <label for="neur">Neuroticism</label
           ><input
@@ -164,18 +212,19 @@
           checked
         />
         <label for="both">Both</label>
+=======
+>>>>>>> f457114078bf6b85f941f7be04228be2471acedf
       </div>
+
+      <br /><br />
     </div>
 
-    <br /><br />
-  </div>
-  
     <div id="hist-container">
       <div class="stars">
-      <svg id="histogram"></svg>
-      <button id="hist-button">Back to map</button>
-  </div>
-</div>
+        <svg id="histogram"></svg>
+        <button id="hist-button">Back to map</button>
+      </div>
+    </div>
     <!--<h1>Personality types across the world</h1>-->
 
     <div id="first-trait" class="Openness">
