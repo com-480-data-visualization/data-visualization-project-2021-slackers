@@ -212,7 +212,8 @@ class Map {
         const ext = d3.brushSelection(this);
         minAge = parseInt(xScale.invert(ext[0]));
         maxAge = parseInt(xScale.invert(ext[1]));
-        d3.select("#age-title").text(`Selected age: ${minAge}-${maxAge}`);
+       
+        d3.select("#age-title").text(`Selected age: [${minAge}-${maxAge}]`);
         if (chosenTraitArr.length !== 0) {
           const t = d3.transition().duration(1000).ease(d3.easeLinear);
           map.g.selectAll("path").transition(t).attr("fill", map.colorFill());

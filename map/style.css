@@ -392,10 +392,15 @@ img:hover {
 
 #age-title {
   fill: white;
-  text-shadow: 3px 2px gray;
-  font-size: 25px;
-  font-family: sans-serif;
+  font-size: 1.25em;
+  position: relative;
+  margin: 0 auto 1em;
+  padding: 1em 1em 0.25em 1em;
+  text-align: center;
+  text-transform: uppercase;
 }
+ 
+
 
 #axis {
   stroke: #ffffff;
