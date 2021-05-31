@@ -409,9 +409,20 @@ img:hover {
   font-size: 50px;
 }
 
-#histogram rect {
-  fill: red;
-  opacity: 0.7;
+#histogram .hist-rect-0 {
+  fill: rgb(221, 78, 78);
+}
+
+#histogram .hist-rect-1 {
+  fill: rgb(72, 218, 108);
+}
+
+#histogram .hist-rect-2 {
+  fill: lightyellow;
+}
+
+#histogram .hist-rect-3 {
+  fill: lightgreen;
 }
 
 #histogram g {
