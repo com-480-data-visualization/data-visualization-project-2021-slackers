@@ -565,13 +565,14 @@ img:hover {
 .stars {
   background: black
     url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat;
-  position: absolute;
+  position: relative;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   display: block;
   z-index: 0;
+  min-height: 100vh;
 }
 .imgmoon {
   border-color: black;
