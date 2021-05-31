@@ -8,7 +8,7 @@
 | Furkan Karakas   | 306399 |
 | Alexandre Luster | 289240 |
 
-[Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3-4th-june-5pm)
+[Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
 
 ## Milestone 1
 
@@ -51,11 +51,6 @@ We would like to mention that we have never used this dataset in any of our past
 
 The two-page document for the submission for milestone 2 can be found [here](./Milestone_2.pdf).
 
-## Milestone 3 (4th June, 5pm)
+## Milestone 3
 
-**80% of the final grade**
-
-## Late policy
-
-- < 24h: 80% of the grade for the milestone
-- < 48h: 70% of the grade for the milestone
+The process book for the submission for milestone 3 can be found [](./DataViz process book.pdf).
