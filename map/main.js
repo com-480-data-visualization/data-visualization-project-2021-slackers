@@ -358,14 +358,14 @@ class Map {
 
       this.addPlot = function () {
         let data = this.rawCSV;
-        const byCountry = crossfilter(data).dimension((d) => d.country);
+        let byCountry = crossfilter(data).dimension((d) => d.country);
         data = byCountry.filter(id_to_isoa2[selectedCountry]).top(Infinity);
         if (chosenSex !== "Both") {
           const bySex = crossfilter(data).dimension((d) => d.sex);
           data = bySex.filter(chosenSex).top(Infinity);
         }
-        let byAge = {};
-        var ages = [
+        const byAge = {};
+        const ages = [
           "teenagers (<20)",
           "young adults (20-39)",
           "middle-aged adults (40-59)",
@@ -407,9 +407,9 @@ class Map {
           height = HEIGHT - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
-        d3.select("#histogram").selectAll("g").remove();
+        d3.select("#bar-chart").selectAll("g").remove();
         var svg = d3
-          .select("#histogram")
+          .select("#bar-chart")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom + 80)
           .append("g")
@@ -488,6 +488,159 @@ class Map {
               .style("top", d3.event.pageY + "px");
           })
           .on("mouseout", function () {
+            div.style("display", "none");
+          });
+
+        // Histogram logic
+        var margin = { top: 100, right: 30, bottom: 10, left: 40 },
+          width = WIDTH - margin.left - margin.right,
+          height = HEIGHT - margin.top - margin.bottom;
+
+        data = this.rawCSV;
+        byCountry = crossfilter(data).dimension((d) => d.country);
+        data = byCountry.filter(id_to_isoa2[selectedCountry]).top(Infinity);
+        if (chosenSex !== "Both") {
+          const bySex = crossfilter(data).dimension((d) => d.sex);
+          data = bySex.filter(chosenSex).top(Infinity);
+        }
+        // Filter by age
+        const byAge2 = crossfilter(data).dimension((d) => d.age);
+        data = byAge2.filter([minAge, maxAge]).top(Infinity);
+        const bin_size = 20;
+        const intervals = [];
+        for (let i = 1; i <= bin_size; i++) {
+          if (i === 1) {
+            intervals.push(`[${(i - 1) / bin_size}-${i / bin_size}]`);
+            continue;
+          }
+          intervals.push(`(${(i - 1) / bin_size}-${i / bin_size}]`);
+        }
+        // Keep the count for each interval
+        const counts = [];
+        intervals.forEach((d, i) => {
+          counts.push(0);
+        });
+        data.forEach((d) => {
+          let score = 0;
+          chosenTraitArr.forEach((trait) => {
+            score += d[trait];
+          });
+          score /= chosenTraitArr.length;
+          for (let i = 0; i < intervals.length; i++) {
+            if (score <= (i + 1) / bin_size) {
+              counts[i] += 1;
+              break;
+            }
+          }
+        });
+
+        // Normalize the max element to 1
+        const maxElement = Math.max(...counts);
+        counts.forEach((d, i) => {
+          counts[i] /= maxElement;
+        });
+
+        // append the svg object to the body of the page
+        d3.select("#histogram").selectAll("g").remove();
+        var svg = d3
+          .select("#histogram")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom + 80)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+          );
+        var x = d3.scaleBand().range([0, width]).domain(intervals).padding(0.2);
+
+        svg
+          .append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x))
+          .selectAll("text")
+          .style("font-size", "20px")
+          .style("text-anchor", "center")
+          .attr("transform", "translate(0,20)rotate(-15)");
+
+        title = "Histogram ";
+        i = 0;
+        while (i < chosenTraitArr.length) {
+          title += nameMap[chosenTraitArr[i]];
+          if (i < chosenTraitArr.length - 1) {
+            title += " + ";
+          }
+          i += 1;
+        }
+
+        title += " in " + id_to_name[selectedCountry];
+        if (chosenSex === "Male") {
+          title += " (men)";
+        } else if (chosenSex === "Female") {
+          title += " (women)";
+        }
+
+        title += " (" + minAge.toString() + "-" + maxAge.toString() + ")";
+
+        svg
+          .append("text")
+          .attr("x", 30)
+          .attr("y", 10)
+          .text(title)
+          .style("font-size", "24px")
+          .style("text-anchor", "center");
+
+        // Add Y axis
+        var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+        svg.append("g").call(d3.axisLeft(y));
+
+        const colorArr = [
+          "rgba(220,220,220,0.5)",
+          "rgba(220,220,220,0.8)",
+          "rgba(220,220,220,0.75)",
+          "rgba(220,220,220,1)",
+        ];
+
+        // Bars
+        svg.selectAll("rect").remove();
+        svg
+          .selectAll("rect")
+          .data(counts)
+          .enter()
+          .append("rect")
+          .attr("x", function (d, i) {
+            return x(intervals[i]);
+          })
+          .attr("y", function (d, i) {
+            return y(d);
+          })
+          .attr("class", function (d, i) {
+            return "hist-rect-" + i;
+          })
+          .attr("fill", function (d, i) {
+            return colorArr[i % colorArr.length];
+          })
+          .attr("width", x.bandwidth())
+          .attr("height", function (d) {
+            return height - y(d);
+          })
+          .on("mouseover", function (d) {
+            const class_name = d3.select(this).attr("class").split("-");
+            let L = Math.round(
+              counts[class_name[class_name.length - 1]] * maxElement
+            );
+            d3.select(this).attr("fill", "orange");
+
+            div.style("display", "block");
+            div
+              .html("Count: " + L)
+              .style("left", d3.event.pageX + 15 + "px")
+              .style("top", d3.event.pageY + "px");
+          })
+          .on("mouseout", function () {
+            d3.select(this).attr(
+              "fill",
+              colorArr[this.className.animVal.slice(-1) % colorArr.length]
+            );
             div.style("display", "none");
           });
       };

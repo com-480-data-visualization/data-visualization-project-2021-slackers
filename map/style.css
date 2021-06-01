@@ -406,24 +406,42 @@ img:hover {
   font-family: sans-serif;
 }
 
-#histogram {
+#bar-chart {
   fill: white;
+  font-size: 15px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
-#histogram .hist-rect-0 {
+#bar-chart .hist-rect-0 {
   fill: rgb(221, 78, 78);
 }
 
-#histogram .hist-rect-1 {
+#bar-chart .hist-rect-1 {
   fill: rgb(72, 218, 108);
 }
 
-#histogram .hist-rect-2 {
+#hbar-chart .hist-rect-2 {
   fill: lightyellow;
 }
 
-#histogram .hist-rect-3 {
+#bar-chart .hist-rect-3 {
   fill: lightgreen;
+}
+
+#bar-chart g {
+  stroke-width: 1mm;
+  color: white;
+}
+
+#bar-chart text {
+  font-size: 15px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+#histogram {
+  fill: white;
+  font-size: 15px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 #histogram g {
