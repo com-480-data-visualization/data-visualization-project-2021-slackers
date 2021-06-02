@@ -40,7 +40,7 @@ const mapUnidentified = {
 
 const projector =
   d3.geoNaturalEarth1(); /*geoNaturalEarth1, geoMercator, geopEquirectangular etc.*/
-const chosenTraitArr = [];
+let chosenTrait = "None";
 let minAge = 0;
 let maxAge = 99;
 let chosenSex = "Both";
@@ -72,10 +72,9 @@ function whenDocumentLoaded(action) {
 
 function selectSex(s) {
   chosenSex = s;
-  if (chosenTraitArr.length !== 0) {
+  if (chosenTrait !== "None") {
     const t = d3.transition().duration(1000).ease(d3.easeLinear);
     map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
-    map.addPlot();
   }
 }
 
@@ -208,13 +207,18 @@ class Map {
         [0, -30],
         [WIDTH / 2, 0],
       ])
-      .on("end", function brushended() {
+      .on("end", function () {
         const ext = d3.brushSelection(this);
-        minAge = parseInt(xScale.invert(ext[0]));
-        maxAge = parseInt(xScale.invert(ext[1]));
+        if (Array.isArray(ext)) {
+          minAge = parseInt(xScale.invert(ext[0]));
+          maxAge = parseInt(xScale.invert(ext[1]));
+        } else {
+          // If user does a single click, simply return
+          return;
+        }
 
         d3.select("#age-title").text(`Selected age: ${minAge}-${maxAge}`);
-        if (chosenTraitArr.length !== 0) {
+        if (chosenTrait !== "None") {
           const t = d3.transition().duration(1000).ease(d3.easeLinear);
           map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
         }
@@ -311,13 +315,8 @@ class Map {
 
         Object.keys(stats).forEach((key) => {
           if (stats[key].count >= MIN_OBS) {
-            let totalStats = 0;
-            chosenTraitArr.forEach((trait) => {
-              totalStats += stats[key][trait];
-            });
-            totalStats /= chosenTraitArr.length;
-            max = Math.max(max, totalStats);
-            min = Math.min(min, totalStats);
+            max = Math.max(max, stats[key][chosenTrait]);
+            min = Math.min(min, stats[key][chosenTrait]);
           }
         });
 
@@ -328,13 +327,7 @@ class Map {
         return (d) => {
           var color;
           try {
-            let val = 0;
-
-            chosenTraitArr.forEach((trait) => {
-              val += stats[id_to_isoa2[d.id]][trait];
-            });
-
-            val /= chosenTraitArr.length;
+            const val = stats[id_to_isoa2[d.id]][chosenTrait];
 
             color = colorScale(val);
             const n_obs = stats[id_to_isoa2[d.id]].count;
@@ -375,11 +368,7 @@ class Map {
           byAge[d] = [];
         });
         data.forEach((d) => {
-          let score = 0;
-          chosenTraitArr.forEach((trait) => {
-            score += d[trait];
-          });
-          score /= chosenTraitArr.length;
+          const score = d[chosenTrait];
           if (d.age < 20) {
             byAge["teenagers (<20)"].push(score);
           } else if (d.age < 40) {
@@ -428,15 +417,7 @@ class Map {
           .style("text-anchor", "center")
           .attr("transform", "translate(0,20)rotate(-10)");
 
-        let title = "Mean ";
-        let i = 0;
-        while (i < chosenTraitArr.length) {
-          title += nameMap[chosenTraitArr[i]];
-          if (i < chosenTraitArr.length - 1) {
-            title += " + ";
-          }
-          i += 1;
-        }
+        let title = "Mean " + nameMap[chosenTrait];
 
         title += " in " + id_to_name[selectedCountry];
         if (chosenSex === "Male") {
@@ -521,11 +502,8 @@ class Map {
           counts.push(0);
         });
         data.forEach((d) => {
-          let score = 0;
-          chosenTraitArr.forEach((trait) => {
-            score += d[trait];
-          });
-          score /= chosenTraitArr.length;
+          const score = d[chosenTrait];
+
           for (let i = 0; i < intervals.length; i++) {
             if (score <= (i + 1) / bin_size) {
               counts[i] += 1;
@@ -558,19 +536,11 @@ class Map {
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x))
           .selectAll("text")
-          .style("font-size", "20px")
+          .style("font-size", "10px")
           .style("text-anchor", "center")
-          .attr("transform", "translate(0,20)rotate(-15)");
+          .attr("transform", "translate(0,20)rotate(-45)");
 
-        title = "Histogram ";
-        i = 0;
-        while (i < chosenTraitArr.length) {
-          title += nameMap[chosenTraitArr[i]];
-          if (i < chosenTraitArr.length - 1) {
-            title += " + ";
-          }
-          i += 1;
-        }
+        title = "Histogram " + nameMap[chosenTrait];
 
         title += " in " + id_to_name[selectedCountry];
         if (chosenSex === "Male") {
@@ -661,12 +631,12 @@ class Map {
         .append("path")
         .attr("class", "country")
         .on("click", (e) => {
-          if (chosenTraitArr.length === 0) {
-            alert("Please activate at least one of the traits!");
+          if (chosenTrait === "None") {
+            alert("Please activate one trait!");
             return;
           }
           selectedCountry = e.id;
-          this.addPlot(e);
+          this.addPlot();
           const elem = document.getElementById("hist-container");
           elem.style.display = "block";
           elem.scrollIntoView();
@@ -712,21 +682,11 @@ whenDocumentLoaded(() => {
 const selectElem = document.getElementsByClassName("flipswitch");
 
 for (let elem of selectElem) {
-  elem.onchange = function () {
-    if (elem.checked) {
-      chosenTraitArr.push(elem.name);
-    } else {
-      const index = chosenTraitArr.indexOf(elem.name);
-      if (index > -1) {
-        chosenTraitArr.splice(index, 1);
-      } else {
-        console.log("Element not found in array, what?");
-      }
-    }
-
+  elem.onclick = function () {
+    chosenTrait = elem.value;
     const t = d3.transition().duration(1000).ease(d3.easeLinear);
 
-    if (chosenTraitArr.length === 0) {
+    if (chosenTrait === "None") {
       map.g.selectAll("path").transition(t).attr("fill", DEFAULTCOUNTRYCOLOR);
       legendContainer.attr("display", "none");
       grayRectContainer.attr("display", "none");
@@ -781,4 +741,8 @@ const histButton = document.getElementById("hist-button");
 histButton.onclick = function () {
   const elem = document.getElementById("main-page");
   elem.scrollIntoView();
+  // Disable the histogram section
+  setTimeout(() => {
+    document.getElementById("hist-container").style.display = "none";
+  }, 1000);
 };
