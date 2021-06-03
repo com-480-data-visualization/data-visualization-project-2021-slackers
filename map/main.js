@@ -48,7 +48,6 @@ let maxAge = 99;
 let chosenSex = "Both";
 let selectedCountry = "none";
 
-
 function rowConverter(d) {
   return {
     id: parseInt(d.case_id),
@@ -63,21 +62,15 @@ function rowConverter(d) {
   };
 }
 
-function whenDocumentLoaded(action) {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", action);
-  } else {
-    action();
-  }
-}
-
 function selectSex(s) {
   chosenSex = s;
   if (chosenTrait !== "None") {
-	// Update colouring
+    // Update colouring
     const t = d3.transition().duration(1000).ease(d3.easeLinear);
     map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
-	map.addPlot(); // Update the plots
+    if (document.getElementById("hist-container").style.display === "block") {
+      map.addPlot(); // Update the plots
+    }
   }
 }
 
@@ -145,8 +138,8 @@ function drawLegend(interpolator) {
     .attr("x", 0)
     .attr("y", -5)
     .text("High")
-    .style("fill", cScale(legendRes-1))
-    .style("stroke", cScale(legendRes-1));
+    .style("fill", cScale(legendRes - 1))
+    .style("stroke", cScale(legendRes - 1));
 
   // Lower description
   legendContainer
@@ -157,24 +150,24 @@ function drawLegend(interpolator) {
     .style("fill", cScale(0))
     .style("stroke", cScale(0));
 
-	// Draw the gray legend
-   grayRectContainer
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", legendW)
-      .attr("height", 18)
-      .transition(t)
-      .attr("fill", "lightgray");
+  // Draw the gray legend
+  grayRectContainer
+    .append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", legendW)
+    .attr("height", 18)
+    .transition(t)
+    .attr("fill", "lightgray");
 
-    // Add the description to the gray legend
-    grayRectContainer
-      .append("text")
-      .attr("x", 0)
-      .attr("y", -5)
-      .text(`< ${MIN_OBS}`)
-      .style("fill", "lightgray")
-      .style("stroke", "lightgray");
+  // Add the description to the gray legend
+  grayRectContainer
+    .append("text")
+    .attr("x", 0)
+    .attr("y", -5)
+    .text(`< ${MIN_OBS}`)
+    .style("fill", "lightgray")
+    .style("stroke", "lightgray");
 }
 
 class Map {
@@ -204,14 +197,14 @@ class Map {
       .attr("width", WIDTH)
       .attr("height", scaleH);
 
-	// Draw the axis
+    // Draw the axis
     var ageAxis = scaleSvg
       .append("g")
       .attr("id", "axis")
       .attr("transform", `translate(250,${scaleH / 2})`) // This controls the vertical position of the Axis
       .call(d3.axisBottom(xScale));
 
-	// Define a brush to select the age to filter
+    // Define a brush to select the age to filter
     const brush = d3
       .brushX()
       .extent([
@@ -227,21 +220,25 @@ class Map {
           return;
         }
 
-		// Reflect the change to min and max age
+        // Reflect the change to min and max age
         d3.select("#age-title").text(`Selected age: ${minAge}-${maxAge}`);
         if (chosenTrait !== "None") {
           const t = d3.transition().duration(1000).ease(d3.easeLinear);
-		  // Update the map
+          // Update the map
           map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
-		  // Update the plots
-		  map.addPlot();
+
+          if (
+            document.getElementById("hist-container").style.display === "block"
+          ) {
+            map.addPlot(); // Update the plots
+          }
         }
       });
 
-	// Add the brush
+    // Add the brush
     ageAxis.call(brush);
 
-	// Draw text to show age selection
+    // Draw text to show age selection
     scaleSvg
       .append("text")
       .attr("id", "age-title")
@@ -249,9 +246,8 @@ class Map {
       .attr("y", 20)
       .text(`Selected age: ${minAge}-${maxAge}`);
 
-
     // Draw background earth (i.e. sea)
-	const g = svg.append("g");
+    const g = svg.append("g");
     this.g = g;
     g.append("path")
       .attr("class", "sphere")
@@ -270,18 +266,17 @@ class Map {
         name_to_isoa2[d.name] = d.iso_a2;
       });
 
-
       this.rawCSV = csvData; // Save the loaded personality dataset
-	  // Compute stats (i.e. mean of each trait and count) for each country
+      // Compute stats (i.e. mean of each trait and count) for each country
       this.computeStats = function () {
         stats = {};
         var data = this.rawCSV;
 
-		// Filter the current age selection
+        // Filter the current age selection
         const byAge = crossfilter(map.rawCSV).dimension((d) => d.age);
         data = byAge.filter([minAge, maxAge]).top(Infinity);
 
-		// Filter the sex selection
+        // Filter the sex selection
         if (chosenSex !== "Both") {
           const bySex = crossfilter(data).dimension((d) => d.sex);
           data = bySex.filter(chosenSex).top(Infinity);
@@ -289,7 +284,8 @@ class Map {
 
         data.forEach((row) => {
           const country = row.country;
-          if (!(country in stats)) { // Add a new country to stats
+          if (!(country in stats)) {
+            // Add a new country to stats
             stats[country] = {
               count: 1,
               agre: row.agre,
@@ -298,7 +294,8 @@ class Map {
               cons: row.cons,
               neur: row.neur,
             };
-		} else { // Update the stats of a country already in stats
+          } else {
+            // Update the stats of a country already in stats
             stats[country].count += 1;
             stats[country].agre += row.agre;
             stats[country].extr += row.extr;
@@ -307,7 +304,7 @@ class Map {
             stats[country].neur += row.neur;
           }
         });
-		// Go from sum to mean
+        // Go from sum to mean
         Object.keys(stats).forEach((key) => {
           stats[key].agre /= stats[key].count;
           stats[key].extr /= stats[key].count;
@@ -319,13 +316,13 @@ class Map {
         return stats;
       };
 
-	  /* The function uses the current parameters to create a new function
+      /* The function uses the current parameters to create a new function
 	  that is used to color the countries. */
       this.colorFill = function () {
-		// First, re-compute stats with current parameters
+        // First, re-compute stats with current parameters
         stats = this.computeStats();
 
-		// Determine the min and max (average in a country) for the chosen trait
+        // Determine the min and max (average in a country) for the chosen trait
         let min = 1;
         let max = 0;
         Object.keys(stats).forEach((key) => {
@@ -335,7 +332,7 @@ class Map {
           }
         });
 
-		// Define the color scale
+        // Define the color scale
         const colorScale = d3
           .scaleSequential(colorInterpolator)
           .domain([min, max]);
@@ -364,21 +361,21 @@ class Map {
         .attr("class", "tooltip")
         .style("display", "none");
 
-	  // Function to add the bar plot and histogram
+      // Function to add the bar plot and histogram
       this.addPlot = function () {
         let data = this.rawCSV;
 
-		// Select the current country
+        // Select the current country
         let byCountry = crossfilter(data).dimension((d) => d.country);
         data = byCountry.filter(id_to_isoa2[selectedCountry]).top(Infinity);
-		// Select the current sex selection
+        // Select the current sex selection
         if (chosenSex !== "Both") {
           const bySex = crossfilter(data).dimension((d) => d.sex);
           data = bySex.filter(chosenSex).top(Infinity);
         }
         const byAge = {};
 
-		// List all scores according to the age froup
+        // List all scores according to the age group
         const ages = [
           "teenagers (<20)",
           "young adults (20-39)",
@@ -401,7 +398,7 @@ class Map {
           }
         });
 
-		// Take the mean for each age group
+        // Take the mean for each age group
         let means = [];
         ages.forEach((age) => {
           let L = byAge[age].length;
@@ -429,10 +426,10 @@ class Map {
             "translate(" + margin.left + "," + margin.top + ")"
           );
 
-		// Scale for the x axis
+        // Scale for the x axis
         var x = d3.scaleBand().range([0, width]).domain(ages).padding(0.2);
 
-		// Draw the x scale
+        // Draw the x scale
         svg
           .append("g")
           .attr("transform", "translate(0," + height + ")")
@@ -441,7 +438,7 @@ class Map {
           .style("font-size", "24px")
           .attr("transform", "translate(0,20)rotate(-8)");
 
-		// Add a title to the bar plot
+        // Add a title to the bar plot
         let title = "Mean " + nameMap[chosenTrait];
         title += " in " + id_to_name[selectedCountry];
         if (chosenSex === "Male") {
@@ -460,13 +457,14 @@ class Map {
         // Define and draw the Y axis
         var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
         svg.append("g").call(d3.axisLeft(y));
-		svg.append("text")
-		    .attr("text-anchor", "middle")
-			.attr("x", -height/2)
-		    .attr("y", -60)
-		    .attr("dy", "1.5em")
-		    .attr("transform", "rotate(-90)")
-		    .text("Score");
+        svg
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("x", -height / 2)
+          .attr("y", -60)
+          .attr("dy", "1.5em")
+          .attr("transform", "rotate(-90)")
+          .text("Score");
 
         // Draw the bars
         svg.selectAll("rect").remove(); // Remove all the old ones
@@ -488,7 +486,8 @@ class Map {
           .attr("height", function (d) {
             return height - y(d);
           })
-          .on("mouseover", function (d) { // Show count upon mouseover
+          .on("mouseover", function (d) {
+            // Show count upon mouseover
             let L = byAge[ages[this.className.animVal.slice(-1)]].length;
             div.style("display", "block");
             div
@@ -523,10 +522,10 @@ class Map {
             continue;
           }
           intervals.push(`(${(i - 1) / nBins}-${i / nBins}]`);
-	  }
+        }
         // Keep the count for each interval
         const counts = [];
-        intervals.forEach((d, i) => {
+        intervals.forEach(() => {
           counts.push(0);
         });
         data.forEach((d) => {
@@ -542,8 +541,8 @@ class Map {
 
         // Normalize so the bars sum to 100%
         const sumCounts = counts.reduce((a, b) => a + b, 0);
-        counts.forEach((d, i) => {
-          counts[i] *= 100/sumCounts;
+        counts.forEach((_, i) => {
+          counts[i] = sumCounts !== 0 ? (counts[i] * 100) / sumCounts : 0;
         });
 
         // append the svg object to the body of the page
@@ -557,7 +556,7 @@ class Map {
             "transform",
             "translate(" + margin.left + "," + margin.top + ")"
           );
-		var x2 = d3.scaleLinear().range([0, width]).domain([0, 1]);
+        var x2 = d3.scaleLinear().range([0, width]).domain([0, 1]);
 
         svg
           .append("g")
@@ -566,22 +565,24 @@ class Map {
           .selectAll("text")
           .attr("transform", "translate(0,10)");
 
-	   svg.append("text")
-  		  .attr("text-anchor", "middle")
-		  .attr("x", width/2)
-  		  .attr("y", height + 20)
-  		  .attr("dy", "1.5em")
-  		  .text("Score");
+        svg
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("x", width / 2)
+          .attr("y", height + 20)
+          .attr("dy", "1.5em")
+          .text("Score");
 
         title = "Distribution of " + nameMap[chosenTrait];
         title += " scores in " + id_to_name[selectedCountry];
-        title += " (" + minAge.toString() + "-" + maxAge.toString() + " years old";
-		if (chosenSex === "Male") {
+        title +=
+          " (" + minAge.toString() + "-" + maxAge.toString() + " years old";
+        if (chosenSex === "Male") {
           title += " men";
         } else if (chosenSex === "Female") {
           title += " women";
         }
-		title += ")";
+        title += ")";
 
         svg
           .append("text")
@@ -591,16 +592,20 @@ class Map {
           .style("font-size", "24px");
 
         // Add Y axis
-        var y = d3.scaleLinear().domain([0, Math.max(...counts)]).range([height, 0]);
+        var y = d3
+          .scaleLinear()
+          .domain([0, Math.max(...counts)])
+          .range([height, 0]);
         svg.append("g").call(d3.axisLeft(y));
 
-		svg.append("text")
-		    .attr("text-anchor", "middle")
-			.attr("x", -height/2)
-		    .attr("y", -60)
-		    .attr("dy", "1.5em")
-		    .attr("transform", "rotate(-90)")
-		    .text("Fraction of the population (%)");
+        svg
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("x", -height / 2)
+          .attr("y", -60)
+          .attr("dy", "1.5em")
+          .attr("transform", "rotate(-90)")
+          .text("Fraction of the population (%)");
 
         const colorArr = [
           "rgba(220,220,220,0.5)",
@@ -617,7 +622,7 @@ class Map {
           .enter()
           .append("rect")
           .attr("x", function (d, i) {
-            return x2(i/nBins) + 1;
+            return x2(i / nBins) + 1;
           })
           .attr("y", function (d, i) {
             return y(d);
@@ -628,14 +633,14 @@ class Map {
           .attr("fill", function (d, i) {
             return colorArr[i % colorArr.length];
           })
-          .attr("width", width/nBins - 2)
+          .attr("width", width / nBins - 2)
           .attr("height", function (d) {
             return height - y(d);
           })
           .on("mouseover", function (d) {
             const class_name = d3.select(this).attr("class").split("-");
             let L = Math.round(
-              counts[class_name[class_name.length - 1]] * sumCounts/100
+              (counts[class_name[class_name.length - 1]] * sumCounts) / 100
             );
             d3.select(this).attr("fill", "orange");
 
@@ -681,11 +686,9 @@ class Map {
           elem.scrollIntoView();
         })
         .on("mouseover", (d) => {
-          let title,
-		  	name,
-			obs;
+          let title, name, obs;
 
-		  try {
+          try {
             name = id_to_name[d.id];
           } catch (e) {
             if (d.id == "-99") {
@@ -694,12 +697,12 @@ class Map {
               name = mapUnidentified[id_to_isoa2[d.id]];
             }
           }
-		  try {
+          try {
             obs = stats[id_to_isoa2[d.id]].count;
           } catch (e) {
-            obs = 0
+            obs = 0;
           }
-		  title = name + " (" + obs + ")";
+          title = name + " (" + obs + ")";
 
           div.style("display", "block");
           div
@@ -720,11 +723,8 @@ class Map {
   }
 }
 
-let map;
-
-whenDocumentLoaded(() => {
-  map = new Map();
-});
+// With defer tag we don't need to check document loaded event actually.
+const map = new Map();
 
 const selectElem = document.getElementsByClassName("flipswitch");
 
