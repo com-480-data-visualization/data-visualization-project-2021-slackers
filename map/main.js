@@ -3,7 +3,7 @@ const RES = highResolution ? 50 : 110;
 
 const WIDTH = 960;
 const HEIGHT = 500;
-const MIN_OBS = 10; // Countries with less than MIN_OBS answers are not counted
+let MIN_OBS = 10; // Countries with less than MIN_OBS answers are not counted
 const scaleH = 100;
 const DEFAULTCOUNTRYCOLOR = "gray"; // When not colored
 const nameMap = {
@@ -72,6 +72,16 @@ function selectSex(s) {
       map.addPlot(); // Update the plots
     }
   }
+}
+
+function changeMinObs() {
+	MIN_OBS = document.getElementById('min_obs').value;
+	grayRectContainer.selectAll("text").text(`< ${MIN_OBS}`);
+	if (chosenTrait !== "None") {
+      const t = d3.transition().duration(1000).ease(d3.easeLinear);
+      map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
+    }
+
 }
 
 var stats = {};

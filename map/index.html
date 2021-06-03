@@ -141,6 +141,13 @@
 
         <svg id="ageScale"></svg>
 
+		<input type="number" id="min_obs" value=10 min = 1 onchange="changeMinObs()" list="defaultNumbers">
+		<datalist id="defaultNumbers">
+		  <option value="10">
+		  <option value="100">
+		  <option value="1000">
+		</datalist>
+
         <div class="radio-toolbar">
           <input
             type="radio"
