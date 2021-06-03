@@ -351,7 +351,7 @@ img:hover {
 
 .row ul {
   text-align: left;
-  list-style: georgian;
+  list-style: lower-roman;
 }
 .row h3 {
   color: #1d9bc9;
@@ -371,6 +371,12 @@ img:hover {
   display: block;
 }
 
+#min-obs-label {
+  color: #ffffff;
+  font-weight: bold;
+  display: block;
+}
+
 .radio-toolbar input[type="radio"] {
   display: none;
 }
@@ -385,7 +391,7 @@ img:hover {
 }
 
 .radio-toolbar input[type="radio"]:checked + label {
-  background-color: #bbb;
+  background-color: rgb(148, 117, 117);
 }
 
 #age-title {
@@ -396,6 +402,10 @@ img:hover {
   padding: 1em 1em 0.25em 1em;
   text-align: center;
   text-transform: uppercase;
+}
+#obs-title {
+  fill: white;
+  font-size: 0.75em;
 }
 
 #axis {
