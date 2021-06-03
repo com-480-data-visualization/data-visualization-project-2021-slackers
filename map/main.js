@@ -681,17 +681,25 @@ class Map {
           elem.scrollIntoView();
         })
         .on("mouseover", (d) => {
-          let title;
-          try {
-            title =
-              id_to_name[d.id] + " (" + stats[id_to_isoa2[d.id]].count + ")";
+          let title,
+		  	name,
+			obs;
+
+		  try {
+            name = id_to_name[d.id];
           } catch (e) {
             if (d.id == "-99") {
-              title = "Unidentified";
+              name = "Unidentified";
             } else {
-              title = mapUnidentified[id_to_isoa2[d.id]] + " (0)";
+              name = mapUnidentified[id_to_isoa2[d.id]];
             }
           }
+		  try {
+            obs = stats[id_to_isoa2[d.id]].count;
+          } catch (e) {
+            obs = 0
+          }
+		  title = name + " (" + obs + ")";
 
           div.style("display", "block");
           div
