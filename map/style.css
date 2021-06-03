@@ -397,6 +397,10 @@ img:hover {
   text-align: center;
   text-transform: uppercase;
 }
+#obs-title {
+  fill: white;
+  font-size: 0.75em;
+}
 
 #axis {
   stroke: #ffffff;
