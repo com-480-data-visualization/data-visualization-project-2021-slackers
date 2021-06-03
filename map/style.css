@@ -371,6 +371,12 @@ img:hover {
   display: block;
 }
 
+#min-obs-label {
+  color: #ffffff;
+  font-weight: bold;
+  display: block;
+}
+
 .radio-toolbar input[type="radio"] {
   display: none;
 }
@@ -385,7 +391,7 @@ img:hover {
 }
 
 .radio-toolbar input[type="radio"]:checked + label {
-  background-color: #bbb;
+  background-color: rgb(148, 117, 117);
 }
 
 #age-title {

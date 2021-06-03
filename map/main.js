@@ -75,13 +75,12 @@ function selectSex(s) {
 }
 
 function changeMinObs() {
-	MIN_OBS = document.getElementById('min_obs').value;
-	grayRectContainer.selectAll("text").text(`< ${MIN_OBS}`);
-	if (chosenTrait !== "None") {
-      const t = d3.transition().duration(1000).ease(d3.easeLinear);
-      map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
-    }
-
+  MIN_OBS = document.getElementById("min_obs").value;
+  grayRectContainer.selectAll("text").text(`< ${MIN_OBS}`);
+  if (chosenTrait !== "None") {
+    const t = d3.transition().duration(1000).ease(d3.easeLinear);
+    map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
+  }
 }
 
 var stats = {};
