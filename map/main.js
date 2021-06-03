@@ -1,9 +1,11 @@
-const highResolution = true;
+const highResolution = false;
+const RES = highResolution ? 50 : 110;
+
 const WIDTH = 960;
 const HEIGHT = 500;
-const MIN_OBS = 10;
+const MIN_OBS = 10; // Countries with less than MIN_OBS answers are not counted
 const scaleH = 100;
-const DEFAULTCOUNTRYCOLOR = "gray";
+const DEFAULTCOUNTRYCOLOR = "gray"; // When not colored
 const nameMap = {
   open: "openness",
   extr: "extraversion",
@@ -12,6 +14,7 @@ const nameMap = {
   neur: "neuroticism",
 };
 
+//Countries in the JSON file with no respondent in the dataset
 const mapUnidentified = {
   AX: "Aland Islands",
   AM: "American Samoa",
@@ -38,15 +41,13 @@ const mapUnidentified = {
   TJ: "Tajikistan",
 };
 
-const projector =
-  d3.geoNaturalEarth1(); /*geoNaturalEarth1, geoMercator, geopEquirectangular etc.*/
+const projector = d3.geoNaturalEarth1();
 let chosenTrait = "None";
 let minAge = 0;
 let maxAge = 99;
 let chosenSex = "Both";
 let selectedCountry = "none";
 
-const RES = highResolution ? 50 : 110;
 
 function rowConverter(d) {
   return {
@@ -73,8 +74,10 @@ function whenDocumentLoaded(action) {
 function selectSex(s) {
   chosenSex = s;
   if (chosenTrait !== "None") {
+	// Update colouring
     const t = d3.transition().duration(1000).ease(d3.easeLinear);
     map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
+	map.addPlot(); // Update the plots
   }
 }
 
@@ -88,7 +91,7 @@ const legendW = 40;
 const legendX = WIDTH - legendW;
 const legendY = 30;
 const legendH = 450;
-const legendRes = 100;
+const legendRes = 100; // Number of rectangles in the color legend
 
 var legendContainer = d3
   .select("#map")
@@ -117,6 +120,7 @@ function drawLegend(interpolator) {
 
   const t = d3.transition().duration(1000).ease(d3.easeLinear);
 
+  // Draw the color legend
   legendContainer
     .selectAll("rect")
     .data(data)
@@ -135,46 +139,51 @@ function drawLegend(interpolator) {
     .transition(t)
     .attr("fill", (d) => cScale(d));
 
-  grayRectContainer
-    .append("rect")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", legendW)
-    .attr("height", 18)
-    .transition(t)
-    .attr("fill", "lightgray");
-
-  grayRectContainer
-    .append("text")
-    .attr("x", 0)
-    .attr("y", -5)
-    .text(`< ${MIN_OBS}`)
-    .style("fill", "lightgray")
-    .style("stroke", "lightgray");
-
+  // Upper description
   legendContainer
     .append("text")
     .attr("x", 0)
     .attr("y", -5)
     .text("High")
-    .style("fill", "green")
-    .style("stroke", "green");
+    .style("fill", cScale(legendRes-1))
+    .style("stroke", cScale(legendRes-1));
+
+  // Lower description
   legendContainer
     .append("text")
     .attr("x", 0)
     .attr("y", legendH + 20)
     .text("Low")
-    .style("fill", "red")
-    .style("stroke", "red");
+    .style("fill", cScale(0))
+    .style("stroke", cScale(0));
+
+	// Draw the gray legend
+   grayRectContainer
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", legendW)
+      .attr("height", 18)
+      .transition(t)
+      .attr("fill", "lightgray");
+
+    // Add the description to the gray legend
+    grayRectContainer
+      .append("text")
+      .attr("x", 0)
+      .attr("y", -5)
+      .text(`< ${MIN_OBS}`)
+      .style("fill", "lightgray")
+      .style("stroke", "lightgray");
 }
 
 class Map {
   constructor() {
-    /*Select Map SVG and set size*/
+    //Select Map SVG and set size
     const svg = d3.select("#map");
     svg.attr("width", WIDTH).attr("height", HEIGHT);
 
-    /* Define the map projections*/
+    // Define the map projections
     const height = +svg.attr("height");
     const width = +svg.attr("width") - 2 * legendW;
     const projection = projector
@@ -184,23 +193,25 @@ class Map {
       .translate([width / 2, height / 2]);
     const pathGenerator = d3.geoPath().projection(projection);
 
-    /*Scale for age*/
+    // Scale for age
     var xScale = d3
       .scaleLinear()
-      .domain([0, 100]) // This is what is written on the Axis: from 0 to 100
-      .range([0, WIDTH / 2]); // This is where the axis is placed: from 100px to 800px
-    // Draw the axis
+      .domain([0, 100])
+      .range([0, WIDTH / 2]);
+    // Select the svg element to draw the age scale
     var scaleSvg = d3
       .select("#ageScale")
       .attr("width", WIDTH)
       .attr("height", scaleH);
 
+	// Draw the axis
     var ageAxis = scaleSvg
       .append("g")
       .attr("id", "axis")
       .attr("transform", `translate(250,${scaleH / 2})`) // This controls the vertical position of the Axis
       .call(d3.axisBottom(xScale));
 
+	// Define a brush to select the age to filter
     const brush = d3
       .brushX()
       .extent([
@@ -213,19 +224,24 @@ class Map {
           minAge = parseInt(xScale.invert(ext[0]));
           maxAge = parseInt(xScale.invert(ext[1]));
         } else {
-          // If user does a single click, simply return
           return;
         }
 
+		// Reflect the change to min and max age
         d3.select("#age-title").text(`Selected age: ${minAge}-${maxAge}`);
         if (chosenTrait !== "None") {
           const t = d3.transition().duration(1000).ease(d3.easeLinear);
+		  // Update the map
           map.g.selectAll("path").transition(t).attr("fill", map.colorFill());
+		  // Update the plots
+		  map.addPlot();
         }
       });
 
+	// Add the brush
     ageAxis.call(brush);
 
+	// Draw text to show age selection
     scaleSvg
       .append("text")
       .attr("id", "age-title")
@@ -233,44 +249,39 @@ class Map {
       .attr("y", 20)
       .text(`Selected age: ${minAge}-${maxAge}`);
 
-    /* Allow zooming*/
-    const g = svg.append("g");
-    /*svg.call(
-      d3.zoom().on("zoom", () => {
-        g.attr("transform", d3.event.transform);
-      })
-    );*/
 
+    // Draw background earth (i.e. sea)
+	const g = svg.append("g");
     this.g = g;
-    /* Draw background earth (i.e. sea)*/
     g.append("path")
       .attr("class", "sphere")
       .attr("d", pathGenerator({ type: "Sphere" }));
 
-    /* Load country info from world atlas, topojson file and our dataset, execute when all are loaded. */
+    // Load country info from world atlas, topojson file and our dataset, execute when all are loaded.
     Promise.all([
       d3.tsv("https://unpkg.com/world-atlas@1.1.4/world/" + RES + "m.tsv"),
       d3.json("https://unpkg.com/world-atlas@1.1.4/world/" + RES + "m.json"),
       d3.csv("../data/clean_data.csv", rowConverter),
     ]).then(([tsvData, topoJSONdata, csvData]) => {
-      /* Create helper objects to convert between full name, iso-alpha 2 name and code used in topjson*/
-
+      // Create helper objects to convert between full name, iso-alpha 2 name and code used in topjson
       tsvData.forEach((d) => {
         id_to_name[d.iso_n3] = d.name;
         id_to_isoa2[d.iso_n3] = d.iso_a2;
         name_to_isoa2[d.name] = d.iso_a2;
       });
 
-      /* Compute stats (i.e. mean of each trait and count) for each country*/
-      this.rawCSV = csvData;
 
+      this.rawCSV = csvData; // Save the loaded personality dataset
+	  // Compute stats (i.e. mean of each trait and count) for each country
       this.computeStats = function () {
         stats = {};
         var data = this.rawCSV;
 
+		// Filter the current age selection
         const byAge = crossfilter(map.rawCSV).dimension((d) => d.age);
         data = byAge.filter([minAge, maxAge]).top(Infinity);
 
+		// Filter the sex selection
         if (chosenSex !== "Both") {
           const bySex = crossfilter(data).dimension((d) => d.sex);
           data = bySex.filter(chosenSex).top(Infinity);
@@ -278,7 +289,7 @@ class Map {
 
         data.forEach((row) => {
           const country = row.country;
-          if (!(country in stats)) {
+          if (!(country in stats)) { // Add a new country to stats
             stats[country] = {
               count: 1,
               agre: row.agre,
@@ -287,7 +298,7 @@ class Map {
               cons: row.cons,
               neur: row.neur,
             };
-          } else {
+		} else { // Update the stats of a country already in stats
             stats[country].count += 1;
             stats[country].agre += row.agre;
             stats[country].extr += row.extr;
@@ -296,6 +307,7 @@ class Map {
             stats[country].neur += row.neur;
           }
         });
+		// Go from sum to mean
         Object.keys(stats).forEach((key) => {
           stats[key].agre /= stats[key].count;
           stats[key].extr /= stats[key].count;
@@ -307,12 +319,15 @@ class Map {
         return stats;
       };
 
+	  /* The function uses the current parameters to create a new function
+	  that is used to color the countries. */
       this.colorFill = function () {
+		// First, re-compute stats with current parameters
         stats = this.computeStats();
 
+		// Determine the min and max (average in a country) for the chosen trait
         let min = 1;
         let max = 0;
-
         Object.keys(stats).forEach((key) => {
           if (stats[key].count >= MIN_OBS) {
             max = Math.max(max, stats[key][chosenTrait]);
@@ -320,6 +335,7 @@ class Map {
           }
         });
 
+		// Define the color scale
         const colorScale = d3
           .scaleSequential(colorInterpolator)
           .domain([min, max]);
@@ -335,7 +351,6 @@ class Map {
               color = "lightgray";
             }
           } catch (e) {
-            /*console.log("Uncaught: ", id_to_isoa2[d.id]); */
             color = "lightgray";
           }
           return color;
@@ -349,15 +364,21 @@ class Map {
         .attr("class", "tooltip")
         .style("display", "none");
 
+	  // Function to add the bar plot and histogram
       this.addPlot = function () {
         let data = this.rawCSV;
+
+		// Select the current country
         let byCountry = crossfilter(data).dimension((d) => d.country);
         data = byCountry.filter(id_to_isoa2[selectedCountry]).top(Infinity);
+		// Select the current sex selection
         if (chosenSex !== "Both") {
           const bySex = crossfilter(data).dimension((d) => d.sex);
           data = bySex.filter(chosenSex).top(Infinity);
         }
         const byAge = {};
+
+		// List all scores according to the age froup
         const ages = [
           "teenagers (<20)",
           "young adults (20-39)",
@@ -380,6 +401,7 @@ class Map {
           }
         });
 
+		// Take the mean for each age group
         let means = [];
         ages.forEach((age) => {
           let L = byAge[age].length;
@@ -391,7 +413,7 @@ class Map {
           means.push(score);
         });
 
-        var margin = { top: 10, right: 30, bottom: 100, left: 40 },
+        var margin = { top: 30, right: 30, bottom: 100, left: 60 },
           width = WIDTH - margin.left - margin.right,
           height = HEIGHT - margin.top - margin.bottom;
 
@@ -406,19 +428,21 @@ class Map {
             "transform",
             "translate(" + margin.left + "," + margin.top + ")"
           );
+
+		// Scale for the x axis
         var x = d3.scaleBand().range([0, width]).domain(ages).padding(0.2);
 
+		// Draw the x scale
         svg
           .append("g")
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x))
           .selectAll("text")
           .style("font-size", "24px")
-          .style("text-anchor", "center")
-          .attr("transform", "translate(0,20)rotate(-10)");
+          .attr("transform", "translate(0,20)rotate(-8)");
 
+		// Add a title to the bar plot
         let title = "Mean " + nameMap[chosenTrait];
-
         title += " in " + id_to_name[selectedCountry];
         if (chosenSex === "Male") {
           title += " (men)";
@@ -429,18 +453,23 @@ class Map {
         svg
           .append("text")
           .attr("x", 30)
-          .attr("y", 10)
+          .attr("y", -10)
           .text(title)
-          .style("font-size", "24px")
-          .style("text-anchor", "center");
+          .style("font-size", "24px");
 
-        // Add Y axis
+        // Define and draw the Y axis
         var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
         svg.append("g").call(d3.axisLeft(y));
+		svg.append("text")
+		    .attr("text-anchor", "middle")
+			.attr("x", -height/2)
+		    .attr("y", -60)
+		    .attr("dy", "1.5em")
+		    .attr("transform", "rotate(-90)")
+		    .text("Score");
 
-        // Bars
-
-        svg.selectAll("rect").remove();
+        // Draw the bars
+        svg.selectAll("rect").remove(); // Remove all the old ones
         svg
           .selectAll("rect")
           .data(means)
@@ -459,9 +488,8 @@ class Map {
           .attr("height", function (d) {
             return height - y(d);
           })
-          .on("mouseover", function (d) {
+          .on("mouseover", function (d) { // Show count upon mouseover
             let L = byAge[ages[this.className.animVal.slice(-1)]].length;
-
             div.style("display", "block");
             div
               .html("Count: " + L)
@@ -473,7 +501,7 @@ class Map {
           });
 
         // Histogram logic
-        var margin = { top: 100, right: 30, bottom: 10, left: 40 },
+        var margin = { top: 100, right: 30, bottom: 10, left: 60 },
           width = WIDTH - margin.left - margin.right,
           height = HEIGHT - margin.top - margin.bottom;
 
@@ -487,15 +515,15 @@ class Map {
         // Filter by age
         const byAge2 = crossfilter(data).dimension((d) => d.age);
         data = byAge2.filter([minAge, maxAge]).top(Infinity);
-        const bin_size = 20;
+        const nBins = 20;
         const intervals = [];
-        for (let i = 1; i <= bin_size; i++) {
+        for (let i = 1; i <= nBins; i++) {
           if (i === 1) {
-            intervals.push(`[${(i - 1) / bin_size}-${i / bin_size}]`);
+            intervals.push(`[${(i - 1) / nBins}-${i / nBins}]`);
             continue;
           }
-          intervals.push(`(${(i - 1) / bin_size}-${i / bin_size}]`);
-        }
+          intervals.push(`(${(i - 1) / nBins}-${i / nBins}]`);
+	  }
         // Keep the count for each interval
         const counts = [];
         intervals.forEach((d, i) => {
@@ -505,17 +533,17 @@ class Map {
           const score = d[chosenTrait];
 
           for (let i = 0; i < intervals.length; i++) {
-            if (score <= (i + 1) / bin_size) {
+            if (score <= (i + 1) / nBins) {
               counts[i] += 1;
               break;
             }
           }
         });
 
-        // Normalize the max element to 1
-        const maxElement = Math.max(...counts);
+        // Normalize so the bars sum to 100%
+        const sumCounts = counts.reduce((a, b) => a + b, 0);
         counts.forEach((d, i) => {
-          counts[i] /= maxElement;
+          counts[i] *= 100/sumCounts;
         });
 
         // append the svg object to the body of the page
@@ -529,39 +557,50 @@ class Map {
             "transform",
             "translate(" + margin.left + "," + margin.top + ")"
           );
-        var x = d3.scaleBand().range([0, width]).domain(intervals).padding(0.2);
+		var x2 = d3.scaleLinear().range([0, width]).domain([0, 1]);
 
         svg
           .append("g")
           .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x))
+          .call(d3.axisBottom(x2))
           .selectAll("text")
-          .style("font-size", "10px")
-          .style("text-anchor", "center")
-          .attr("transform", "translate(0,20)rotate(-45)");
+          .attr("transform", "translate(0,10)");
 
-        title = "Histogram " + nameMap[chosenTrait];
+	   svg.append("text")
+  		  .attr("text-anchor", "middle")
+		  .attr("x", width/2)
+  		  .attr("y", height + 20)
+  		  .attr("dy", "1.5em")
+  		  .text("Score");
 
-        title += " in " + id_to_name[selectedCountry];
-        if (chosenSex === "Male") {
-          title += " (men)";
+        title = "Distribution of " + nameMap[chosenTrait];
+        title += " scores in " + id_to_name[selectedCountry];
+        title += " (" + minAge.toString() + "-" + maxAge.toString() + " years old";
+		if (chosenSex === "Male") {
+          title += " men";
         } else if (chosenSex === "Female") {
-          title += " (women)";
+          title += " women";
         }
-
-        title += " (" + minAge.toString() + "-" + maxAge.toString() + ")";
+		title += ")";
 
         svg
           .append("text")
           .attr("x", 30)
-          .attr("y", 10)
+          .attr("y", -10)
           .text(title)
-          .style("font-size", "24px")
-          .style("text-anchor", "center");
+          .style("font-size", "24px");
 
         // Add Y axis
-        var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+        var y = d3.scaleLinear().domain([0, Math.max(...counts)]).range([height, 0]);
         svg.append("g").call(d3.axisLeft(y));
+
+		svg.append("text")
+		    .attr("text-anchor", "middle")
+			.attr("x", -height/2)
+		    .attr("y", -60)
+		    .attr("dy", "1.5em")
+		    .attr("transform", "rotate(-90)")
+		    .text("Fraction of the population (%)");
 
         const colorArr = [
           "rgba(220,220,220,0.5)",
@@ -578,7 +617,7 @@ class Map {
           .enter()
           .append("rect")
           .attr("x", function (d, i) {
-            return x(intervals[i]);
+            return x2(i/nBins) + 1;
           })
           .attr("y", function (d, i) {
             return y(d);
@@ -589,14 +628,14 @@ class Map {
           .attr("fill", function (d, i) {
             return colorArr[i % colorArr.length];
           })
-          .attr("width", x.bandwidth())
+          .attr("width", width/nBins - 2)
           .attr("height", function (d) {
             return height - y(d);
           })
           .on("mouseover", function (d) {
             const class_name = d3.select(this).attr("class").split("-");
             let L = Math.round(
-              counts[class_name[class_name.length - 1]] * maxElement
+              counts[class_name[class_name.length - 1]] * sumCounts/100
             );
             d3.select(this).attr("fill", "orange");
 
