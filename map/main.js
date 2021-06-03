@@ -654,7 +654,7 @@ class Map {
           });
       };
 
-      /* Draw all topojson countries*/
+      // Draw all topojson countries
       const countries = topojson.feature(
         topoJSONdata,
         topoJSONdata.objects.countries
