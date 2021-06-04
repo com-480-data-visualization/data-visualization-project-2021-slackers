@@ -41,7 +41,7 @@ const mapUnidentified = {
   TJ: "Tajikistan",
 };
 
-const projector = d3.geoWinkel3();//d3.geoNaturalEarth1();
+const projector = d3.geoWinkel3();
 let chosenTrait = "None";
 let minAge = 0;
 let maxAge = 99;
@@ -184,18 +184,6 @@ class Map {
     //Select Map SVG and set size
     const svg = d3.select("#map");
     svg.attr("width", WIDTH).attr("height", HEIGHT);
-
-	// ZOOM
-	const zoom = d3.zoom()
-      .scaleExtent([1, 8])
-      .on('zoom', zoomed);
-	svg.call(zoom);
-	function zoomed() {
-      g
-        .selectAll('path') // To prevent stroke width from scaling
-        .attr('transform', d3.event.transform);
-    }
-	d3.select('svg').on('mousedown.zoom',null);
 
 
 
