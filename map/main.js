@@ -185,8 +185,6 @@ class Map {
     const svg = d3.select("#map");
     svg.attr("width", WIDTH).attr("height", HEIGHT);
 
-
-
     // Define the map projections
     const height = +svg.attr("height");
     const width = +svg.attr("width") - 2 * legendW;

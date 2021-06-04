@@ -55,6 +55,6 @@ The two-page document for the submission for milestone 2 can be found [here](./M
 
 Our final product is hosted in Github pages and can be accessed via [this link](https://com-480-data-visualization.github.io/data-visualization-project-2021-slackers/map/index.html).
 
-The process book for the submission for milestone 3 can be found [here](./DataViz_process_book.pdf).
+The process book for the submission for milestone 3 can be found [here](./Process_Book.pdf).
 
 The two-minute-long video for screencast can be found [here](./Screencast.webm).
