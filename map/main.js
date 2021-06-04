@@ -195,6 +195,7 @@ class Map {
         .selectAll('path') // To prevent stroke width from scaling
         .attr('transform', d3.event.transform);
     }
+	d3.select('svg').on('mousedown.zoom',null);
 
 
 
